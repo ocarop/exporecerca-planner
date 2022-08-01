@@ -5,11 +5,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import org.hibernate.annotations.Type;
+import org.optaplanner.core.api.domain.lookup.PlanningId;
 
 @MappedSuperclass
 public abstract class AbstractEntity {
 
     @Id
+	@PlanningId
     @GeneratedValue
     @Type(type = "uuid-char")
     private UUID id;

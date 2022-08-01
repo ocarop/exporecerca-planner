@@ -12,7 +12,6 @@ import org.exporecerca.planner.views.MainLayout;
 
 @PageTitle("About")
 @Route(value = "about", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
 @AnonymousAllowed
 public class AboutView extends VerticalLayout {
 
