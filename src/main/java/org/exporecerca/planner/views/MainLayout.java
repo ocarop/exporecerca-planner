@@ -20,7 +20,10 @@ import org.exporecerca.planner.components.appnav.AppNavItem;
 import org.exporecerca.planner.data.entity.User;
 import org.exporecerca.planner.security.AuthenticatedUser;
 import org.exporecerca.planner.views.about.AboutView;
+import org.exporecerca.planner.views.contestantform.ContestantFormView;
+import org.exporecerca.planner.views.juryform.JuryFormView;
 import org.exporecerca.planner.views.masterdetail.MasterDetailView;
+import org.exporecerca.planner.views.masterdetail.TimeSlotFormView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -69,13 +72,22 @@ public class MainLayout extends AppLayout {
         AppNav nav = new AppNav();
         nav.addClassNames("app-nav");
 
-        if (accessChecker.hasAccess(AboutView.class)) {
+        if (accessChecker.hasAccess(ContestantFormView.class)) {
+            nav.addItem(new AppNavItem("Contestants", ContestantFormView.class, "la la-chalkboard-teacher"));
+
+        }
+        if (accessChecker.hasAccess(JuryFormView.class)) {
+            nav.addItem(new AppNavItem("Juries", JuryFormView.class, "la la-gavel"));
+
+        }        if (accessChecker.hasAccess(AboutView.class)) {
             nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
 
         }
         if (accessChecker.hasAccess(MasterDetailView.class)) {
             nav.addItem(new AppNavItem("Master-Detail", MasterDetailView.class, "la la-chalkboard-teacher"));
-
+        }
+        if (accessChecker.hasAccess(TimeSlotFormView.class)) {
+            nav.addItem(new AppNavItem("Time slots", TimeSlotFormView.class, "la la-calendar"));
         }
 
         return nav;

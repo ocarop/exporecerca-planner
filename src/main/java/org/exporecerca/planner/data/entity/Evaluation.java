@@ -4,14 +4,17 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
+import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
 @PlanningEntity
 @Entity
 public class Evaluation extends AbstractEntity {
 
+	@PlanningVariable
 	@ManyToOne
 	private Jury jury;
 	
+	@PlanningVariable
 	@ManyToOne
 	private Contestant contestant;
 	
