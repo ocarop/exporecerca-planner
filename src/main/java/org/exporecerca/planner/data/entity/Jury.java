@@ -1,7 +1,10 @@
 package org.exporecerca.planner.data.entity;
 
 import java.time.LocalDate;
+import java.util.Collection;
+
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 
@@ -12,7 +15,10 @@ public class Jury extends AbstractEntity {
     private String lastName;
     private String email;
     private String phone;
-
+    
+    @OneToMany
+    private Collection<Topic> topics;
+    
     public String getFirstName() {
         return firstName;
     }

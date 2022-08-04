@@ -11,20 +11,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class JuryService {
+public class TopicService {
 
-    private final JuryRepository repository;
+    private final TopicRepository repository;
 
     @Autowired
-    public JuryService(JuryRepository repository) {
+    public TopicService(TopicRepository repository) {
         this.repository = repository;
     }
 
-    public Optional<Jury> get(UUID id) {
+    public Optional<Topic> get(UUID id) {
         return repository.findById(id);
     }
 
-    public Jury update(Jury entity) {
+    public Topic update(Topic entity) {
         return repository.save(entity);
     }
 
@@ -32,20 +32,20 @@ public class JuryService {
         repository.deleteById(id);
     }
 
-    public Page<Jury> list(Pageable pageable) {
+    public void delete(Topic topic) {
+        repository.delete(topic);
+    }
+    
+    public Page<Topic> list(Pageable pageable) {
         return repository.findAll(pageable);
     }
-
+    
+    public  List<Topic> findAll() {
+        return repository.findAll();
+    }
+    
     public int count() {
         return (int) repository.count();
     }
-    public void delete(Jury jury) {
-        repository.delete(jury);
-    }
-   
-    
-    public  List<Jury> findAll() {
-        return repository.findAll();
-    }
-   
+
 }

@@ -24,6 +24,7 @@ import org.exporecerca.planner.views.contestantform.ContestantFormView;
 import org.exporecerca.planner.views.juryform.JuryFormView;
 import org.exporecerca.planner.views.masterdetail.MasterDetailView;
 import org.exporecerca.planner.views.masterdetail.TimeSlotFormView;
+import org.exporecerca.planner.views.topic.TopicFormView;
 
 /**
  * The main view is a top-level placeholder for other views.
@@ -85,6 +86,9 @@ public class MainLayout extends AppLayout {
         }
         if (accessChecker.hasAccess(MasterDetailView.class)) {
             nav.addItem(new AppNavItem("Master-Detail", MasterDetailView.class, "la la-chalkboard-teacher"));
+        }
+        if (accessChecker.hasAccess(TopicFormView.class)) {
+            nav.addItem(new AppNavItem("Topics", TopicFormView.class, "la la-tags"));
         }
         if (accessChecker.hasAccess(TimeSlotFormView.class)) {
             nav.addItem(new AppNavItem("Time slots", TimeSlotFormView.class, "la la-calendar"));

@@ -31,109 +31,57 @@ import java.util.UUID;
 import javax.annotation.security.PermitAll;
 
 import org.exporecerca.planner.data.entity.Jury;
+import org.exporecerca.planner.data.entity.Topic;
 import org.exporecerca.planner.data.service.JuryService;
+import org.exporecerca.planner.data.service.TopicService;
 import org.exporecerca.planner.views.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.vaadin.crudui.crud.impl.GridCrud;
+import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 
 @PageTitle("Jury Form")
 @Route(value = "jury-form/:samplePersonID?/:action?(edit)", layout = MainLayout.class)
-@RouteAlias(value = "", layout = MainLayout.class)
+@RouteAlias(value = "jury", layout = MainLayout.class)
 @Uses(Icon.class)
 @PermitAll
 public class JuryFormView extends Div implements BeforeEnterObserver {
 
-    private final String SAMPLEPERSON_ID = "samplePersonID";
-    private final String SAMPLEPERSON_EDIT_ROUTE_TEMPLATE = "jury-form/%s/edit";
 
-    private Grid<Jury> grid = new Grid<>(Jury.class, false);
-
-    private TextField firstName;
-    private TextField lastName;
-    private TextField email;
-    private TextField phone;
-    private DatePicker dateOfBirth;
-    private TextField occupation;
-    private Checkbox important;
-
-    private Button cancel = new Button("Cancel");
-    private Button save = new Button("Save");
-
-    private BeanValidationBinder<Jury> binder;
-
-    private Jury samplePerson;
-
-    private final JuryService samplePersonService;
-
+ 
     @Autowired
-    public JuryFormView(JuryService samplePersonService) {
-        this.samplePersonService = samplePersonService;
-        addClassNames("jury-form-view");
+    public JuryFormView(JuryService juryService,TopicService topicService) {
+        // crud instance
+        GridCrud<Jury> crud = new GridCrud<>(Jury.class);
 
-        // Create UI
-        SplitLayout splitLayout = new SplitLayout();
+        // grid configuration
+        crud.getGrid().setColumns ("firstName", "lastName","email");
+        crud.getGrid().setColumnReorderingAllowed(true);
 
-        createGridLayout(splitLayout);
-        createEditorLayout(splitLayout);
-
-        add(splitLayout);
-
-        // Configure Grid
-        grid.addColumn("firstName").setAutoWidth(true);
-        grid.addColumn("lastName").setAutoWidth(true);
-        grid.addColumn("email").setAutoWidth(true);
-        grid.addColumn("phone").setAutoWidth(true);
-
-
-        grid.setItems(query -> samplePersonService.list(
-                PageRequest.of(query.getPage(), query.getPageSize(), VaadinSpringDataHelpers.toSpringDataSort(query)))
-                .stream());
-        grid.addThemeVariants(GridVariant.LUMO_NO_BORDER);
-
-        // when a row is selected or deselected, populate form
-        grid.asSingleSelect().addValueChangeListener(event -> {
-            if (event.getValue() != null) {
-                UI.getCurrent().navigate(String.format(SAMPLEPERSON_EDIT_ROUTE_TEMPLATE, event.getValue().getId()));
-            } else {
-                clearForm();
-                UI.getCurrent().navigate(JuryFormView.class);
-            }
-        });
-
-        // Configure Form
-        binder = new BeanValidationBinder<>(Jury.class);
-
-        // Bind fields. This is where you'd define e.g. validation rules
-
-        binder.bindInstanceFields(this);
-
-        cancel.addClickListener(e -> {
-            clearForm();
-            refreshGrid();
-        });
-
-        save.addClickListener(e -> {
-            try {
-                if (this.samplePerson == null) {
-                    this.samplePerson = new Jury();
-                }
-                binder.writeBean(this.samplePerson);
-
-                samplePersonService.update(this.samplePerson);
-                clearForm();
-                refreshGrid();
-                Notification.show("SamplePerson details stored.");
-                UI.getCurrent().navigate(JuryFormView.class);
-            } catch (ValidationException validationException) {
-                Notification.show("An exception happened while trying to store the samplePerson details.");
-            }
-        });
+        // form configuration
+        crud.getCrudFormFactory().setUseBeanValidation(true);
+        crud.getCrudFormFactory().setVisibleProperties(
+                "firstName", "lastName", "email", "phone", "topics");
+        crud.getCrudFormFactory().setFieldProvider("topics",
+                new CheckBoxGroupProvider<>("Groups",topicService.findAll(),Topic::getName));
+ 
+        // layout configuration
+        setSizeFull();
+        
+		crud.getCrudFormFactory().setUseBeanValidation(true);
+		crud.setFindAllOperation(() -> juryService.findAll());
+		crud.setAddOperation(juryService::update);
+		crud.setUpdateOperation(juryService::update);
+		crud.setDeleteOperation(juryService::delete);	
+        add(crud);
+//        crud.setFindAllOperationVisible(false);
 
     }
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        Optional<UUID> samplePersonId = event.getRouteParameters().get(SAMPLEPERSON_ID).map(UUID::fromString);
+    	/*
+    	Optional<UUID> samplePersonId = event.getRouteParameters().get(SAMPLEPERSON_ID).map(UUID::fromString);
         if (samplePersonId.isPresent()) {
             Optional<Jury> samplePersonFromBackend = samplePersonService.get(samplePersonId.get());
             if (samplePersonFromBackend.isPresent()) {
@@ -148,58 +96,7 @@ public class JuryFormView extends Div implements BeforeEnterObserver {
                 event.forwardTo(JuryFormView.class);
             }
         }
+        */
     }
 
-    private void createEditorLayout(SplitLayout splitLayout) {
-        Div editorLayoutDiv = new Div();
-        editorLayoutDiv.setClassName("editor-layout");
-
-        Div editorDiv = new Div();
-        editorDiv.setClassName("editor");
-        editorLayoutDiv.add(editorDiv);
-
-        FormLayout formLayout = new FormLayout();
-        firstName = new TextField("First Name");
-        lastName = new TextField("Last Name");
-        email = new TextField("Email");
-        phone = new TextField("Phone");
-        Component[] fields = new Component[]{firstName, lastName, email, phone};
-
-        formLayout.add(fields);
-        editorDiv.add(formLayout);
-        createButtonLayout(editorLayoutDiv);
-
-        splitLayout.addToSecondary(editorLayoutDiv);
-    }
-
-    private void createButtonLayout(Div editorLayoutDiv) {
-        HorizontalLayout buttonLayout = new HorizontalLayout();
-        buttonLayout.setClassName("button-layout");
-        cancel.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
-        save.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-        buttonLayout.add(save, cancel);
-        editorLayoutDiv.add(buttonLayout);
-    }
-
-    private void createGridLayout(SplitLayout splitLayout) {
-        Div wrapper = new Div();
-        wrapper.setClassName("grid-wrapper");
-        splitLayout.addToPrimary(wrapper);
-        wrapper.add(grid);
-    }
-
-    private void refreshGrid() {
-        grid.select(null);
-        grid.getLazyDataView().refreshAll();
-    }
-
-    private void clearForm() {
-        populateForm(null);
-    }
-
-    private void populateForm(Jury value) {
-        this.samplePerson = value;
-        binder.readBean(this.samplePerson);
-
-    }
 }
