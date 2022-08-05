@@ -138,7 +138,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
 
     @Override
     public void beforeEnter(BeforeEnterEvent event) {
-        Optional<UUID> samplePersonId = event.getRouteParameters().get(SAMPLEPERSON_ID).map(UUID::fromString);
+/*        Optional<UUID> samplePersonId = event.getRouteParameters().get(SAMPLEPERSON_ID).map(UUID::fromString);
         if (samplePersonId.isPresent()) {
             Optional<SamplePerson> samplePersonFromBackend = samplePersonService.get(samplePersonId.get());
             if (samplePersonFromBackend.isPresent()) {
@@ -152,7 +152,7 @@ public class MasterDetailView extends Div implements BeforeEnterObserver {
                 refreshGrid();
                 event.forwardTo(MasterDetailView.class);
             }
-        }
+        }*/
     }
 
     private void createEditorLayout(SplitLayout splitLayout) {

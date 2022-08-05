@@ -18,7 +18,7 @@ public class SamplePersonService {
         this.repository = repository;
     }
 
-    public Optional<SamplePerson> get(UUID id) {
+    public Optional<SamplePerson> get(Integer id) {
         return repository.findById(id);
     }
 
@@ -26,7 +26,7 @@ public class SamplePersonService {
         return repository.save(entity);
     }
 
-    public void delete(UUID id) {
+    public void delete(Integer id) {
         repository.deleteById(id);
     }
 

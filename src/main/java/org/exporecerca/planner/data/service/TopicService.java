@@ -20,7 +20,7 @@ public class TopicService {
         this.repository = repository;
     }
 
-    public Optional<Topic> get(UUID id) {
+    public Optional<Topic> get(Integer id) {
         return repository.findById(id);
     }
 
@@ -28,7 +28,7 @@ public class TopicService {
         return repository.save(entity);
     }
 
-    public void delete(UUID id) {
+    public void delete(Integer id) {
         repository.deleteById(id);
     }
 

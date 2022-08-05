@@ -1,5 +1,6 @@
 package org.exporecerca.planner.views.about;
 
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
@@ -17,7 +18,11 @@ public class AboutView extends VerticalLayout {
 
     public AboutView() {
         setSpacing(false);
-
+        Button cmdSolve=new Button("Solve");
+        cmdSolve.addClickListener(clickEvent -> {
+        	//test solver
+        	
+        });
         Image img = new Image("images/empty-plant.png", "placeholder plant");
         img.setWidth("200px");
         add(img);

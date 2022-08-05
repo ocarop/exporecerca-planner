@@ -27,6 +27,12 @@ public class TopicFormView extends Div implements BeforeEnterObserver{
 	public TopicFormView(TopicService topicService) {
 		super();
 		GridCrud<Topic> crud = new GridCrud<>(Topic.class);
+		
+
+        // form configuration
+        crud.getCrudFormFactory().setUseBeanValidation(true);
+        crud.getCrudFormFactory().setVisibleProperties("name");
+        
 		crud.getCrudFormFactory().setUseBeanValidation(true);
 		crud.setFindAllOperation(() -> topicService.findAll());
 		crud.setAddOperation(topicService::update);

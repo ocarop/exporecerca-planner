@@ -79,19 +79,15 @@ public class MainLayout extends AppLayout {
         }
         if (accessChecker.hasAccess(JuryFormView.class)) {
             nav.addItem(new AppNavItem("Juries", JuryFormView.class, "la la-gavel"));
-
-        }        if (accessChecker.hasAccess(AboutView.class)) {
-            nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
-
-        }
-        if (accessChecker.hasAccess(MasterDetailView.class)) {
-            nav.addItem(new AppNavItem("Master-Detail", MasterDetailView.class, "la la-chalkboard-teacher"));
-        }
+        }       
         if (accessChecker.hasAccess(TopicFormView.class)) {
             nav.addItem(new AppNavItem("Topics", TopicFormView.class, "la la-tags"));
         }
         if (accessChecker.hasAccess(TimeSlotFormView.class)) {
             nav.addItem(new AppNavItem("Time slots", TimeSlotFormView.class, "la la-calendar"));
+        }
+        if (accessChecker.hasAccess(AboutView.class)) {
+            nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
         }
 
         return nav;
@@ -105,10 +101,8 @@ public class MainLayout extends AppLayout {
         if (maybeUser.isPresent()) {
             User user = maybeUser.get();
 
-            Avatar avatar = new Avatar(user.getName(), user.getProfilePictureUrl());
-            avatar.addClassNames("me-xs");
 
-            ContextMenu userMenu = new ContextMenu(avatar);
+            ContextMenu userMenu = new ContextMenu();
             userMenu.setOpenOnClick(true);
             userMenu.addItem("Logout", e -> {
                 authenticatedUser.logout();
@@ -117,7 +111,7 @@ public class MainLayout extends AppLayout {
             Span name = new Span(user.getName());
             name.addClassNames("font-medium", "text-s", "text-secondary");
 
-            layout.add(avatar, name);
+            layout.add(name);
         } else {
             Anchor loginLink = new Anchor("login", "Sign in");
             layout.add(loginLink);

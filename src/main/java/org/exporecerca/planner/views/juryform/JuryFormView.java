@@ -1,5 +1,6 @@
 package org.exporecerca.planner.views.juryform;
 
+import com.flowingcode.vaadin.addons.gridhelpers.GridHelper;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
@@ -55,15 +56,16 @@ public class JuryFormView extends Div implements BeforeEnterObserver {
         GridCrud<Jury> crud = new GridCrud<>(Jury.class);
 
         // grid configuration
-        crud.getGrid().setColumns ("firstName", "lastName","email");
+        crud.getGrid().setColumns ("firstName", "lastName","email","topics");
         crud.getGrid().setColumnReorderingAllowed(true);
-
+        crud.getGrid().getColumns().forEach(c -> c.setAutoWidth(true));
+        
         // form configuration
         crud.getCrudFormFactory().setUseBeanValidation(true);
         crud.getCrudFormFactory().setVisibleProperties(
                 "firstName", "lastName", "email", "phone", "topics");
         crud.getCrudFormFactory().setFieldProvider("topics",
-                new CheckBoxGroupProvider<>("Groups",topicService.findAll(),Topic::getName));
+                new CheckBoxGroupProvider<Topic>("Topics",topicService.findAll(),Topic::getName));
  
         // layout configuration
         setSizeFull();

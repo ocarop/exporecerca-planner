@@ -20,7 +20,7 @@ public class JuryService {
         this.repository = repository;
     }
 
-    public Optional<Jury> get(UUID id) {
+    public Optional<Jury> get(Integer id) {
         return repository.findById(id);
     }
 
@@ -28,7 +28,7 @@ public class JuryService {
         return repository.save(entity);
     }
 
-    public void delete(UUID id) {
+    public void delete(Integer id) {
         repository.deleteById(id);
     }
 

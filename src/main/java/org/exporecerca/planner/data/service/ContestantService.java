@@ -1,5 +1,6 @@
 package org.exporecerca.planner.data.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public class ContestantService {
         this.repository = repository;
     }
 
-    public Optional<Contestant> get(UUID id) {
+    public Optional<Contestant> get(Integer id) {
         return repository.findById(id);
     }
 
@@ -27,10 +28,14 @@ public class ContestantService {
         return repository.save(entity);
     }
 
-    public void delete(UUID id) {
+    public void delete(Integer id) {
         repository.deleteById(id);
     }
 
+    public void delete(Contestant contestant) {
+        repository.delete(contestant);
+    }
+    
     public Page<Contestant> list(Pageable pageable) {
         return repository.findAll(pageable);
     }
@@ -38,6 +43,11 @@ public class ContestantService {
     public int count() {
         return (int) repository.count();
     }
+
+	public  List<Contestant> findAll() {
+		// TODO Auto-generated method stub
+		return repository.findAll();
+	}
 
 
 }

@@ -10,8 +10,9 @@ import javax.validation.constraints.Size;
 public class Topic extends AbstractEntity {
 
 	@NotNull
-	@Size(min = 1, max = 100)
+	@Size(min = 1, max = 50, message="Size must be between 1 an 50 characters")
 	private String name;
+
 
 	public String getName() {
 		return name;
@@ -21,5 +22,9 @@ public class Topic extends AbstractEntity {
 		this.name = name;
 	}
 	
-	
+
+	@Override
+	public String toString() {
+		return  name ;
+	}	
 }
