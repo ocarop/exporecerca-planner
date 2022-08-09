@@ -68,6 +68,11 @@ public class Jury extends AbstractEntity {
 	public void setTopics(Set<Topic> topics) {
 		this.topics = topics;
 	}
+	
+	@Override
+	public String toString() {
+		return "Jury [firstName=" + firstName + ", lastName=" + lastName + "]";
+	}
 
 
 }

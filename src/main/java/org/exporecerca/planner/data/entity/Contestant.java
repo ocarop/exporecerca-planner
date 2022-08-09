@@ -56,6 +56,10 @@ public class Contestant extends AbstractEntity {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+	@Override
+	public String toString() {
+		return "Contestant [firstName=" + firstName + ", lastName=" + lastName + "]";
+	}
 
 
 }

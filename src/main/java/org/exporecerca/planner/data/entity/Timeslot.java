@@ -1,5 +1,6 @@
 package org.exporecerca.planner.data.entity;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import javax.persistence.Column;
@@ -11,22 +12,22 @@ public class Timeslot extends AbstractEntity {
 
 	@Column(nullable=false)
 	@NotNull
-    private LocalTime startTime;
+    private LocalDateTime startTime;
 	
 	@NotNull
 	@Column(nullable=false)
-	private LocalTime endTime;
+	private LocalDateTime endTime;
     
-	public LocalTime getStartTime() {
+	public LocalDateTime getStartTime() {
 		return startTime;
 	}
-	public void setStartTime(LocalTime startTime) {
+	public void setStartTime(LocalDateTime startTime) {
 		this.startTime = startTime;
 	}
-	public LocalTime getEndTime() {
+	public LocalDateTime getEndTime() {
 		return endTime;
 	}
-	public void setEndTime(LocalTime endTime) {
+	public void setEndTime(LocalDateTime endTime) {
 		this.endTime = endTime;
 	}
 

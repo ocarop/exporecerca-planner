@@ -1,6 +1,5 @@
 package org.exporecerca.planner.views.juryform;
 
-import com.flowingcode.vaadin.addons.gridhelpers.GridHelper;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;

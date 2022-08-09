@@ -39,7 +39,7 @@ public class TimeTable {
 
     @ValueRangeProvider(id = "contestantRange")
     @ProblemFactCollectionProperty
-    private List<Jury> contestantList;
+    private List<Contestant> contestantList;
     
     @PlanningEntityCollectionProperty
     private List<Evaluation> evaluationList;
@@ -75,13 +75,13 @@ public class TimeTable {
 	}
 
 
-	public List<Jury> getContestantList() {
+	public List<Contestant> getContestantList() {
 		return contestantList;
 	}
 
 
-	public void setContestantList(List<Jury> contestantList) {
-		this.contestantList = contestantList;
+	public void setContestantList(List<Contestant> list) {
+		this.contestantList = list;
 	}
 
 

@@ -9,31 +9,150 @@ import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
+
+import java.time.DayOfWeek;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import org.exporecerca.planner.data.entity.Contestant;
+import org.exporecerca.planner.data.entity.Evaluation;
+import org.exporecerca.planner.data.entity.TimeTable;
+import org.exporecerca.planner.data.entity.Timeslot;
+import org.exporecerca.planner.data.service.ContestantService;
+import org.exporecerca.planner.data.service.JuryService;
+import org.exporecerca.planner.data.service.TimeslotService;
+import org.exporecerca.planner.solver.TimeTableConstraintProvider;
 import org.exporecerca.planner.views.MainLayout;
+import org.optaplanner.core.api.solver.Solver;
+import org.optaplanner.core.api.solver.SolverFactory;
+import org.optaplanner.core.config.solver.SolverConfig;
+import org.vaadin.stefan.fullcalendar.Entry;
+import org.vaadin.stefan.fullcalendar.FullCalendar;
+import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
+import org.vaadin.stefan.fullcalendar.FullCalendarScheduler;
+import org.vaadin.stefan.fullcalendar.dataprovider.EntryProvider;
+import org.vaadin.stefan.fullcalendar.dataprovider.LazyInMemoryEntryProvider;
 
 @PageTitle("About")
 @Route(value = "about", layout = MainLayout.class)
 @AnonymousAllowed
 public class AboutView extends VerticalLayout {
 
-    public AboutView() {
-        setSpacing(false);
-        Button cmdSolve=new Button("Solve");
-        cmdSolve.addClickListener(clickEvent -> {
-        	//test solver
-        	
-        });
-        Image img = new Image("images/empty-plant.png", "placeholder plant");
-        img.setWidth("200px");
-        add(img);
+	TimeslotService timeslotService;
+	ContestantService contestantService;
+	JuryService juryService;
 
-        add(new H2("This place intentionally left empty"));
-        add(new Paragraph("It’s a place where you can grow your own UI 🤗"));
+	public AboutView(TimeslotService timeslotService, ContestantService contestantService, JuryService juryService) {
+		this.timeslotService = timeslotService;
+		this.contestantService = contestantService;
+		this.juryService = juryService;
 
-        setSizeFull();
-        setJustifyContentMode(JustifyContentMode.CENTER);
-        setDefaultHorizontalComponentAlignment(Alignment.CENTER);
-        getStyle().set("text-align", "center");
-    }
+		setSpacing(false);
+		Button cmdSolve = new Button("Solve");
+		cmdSolve.addClickListener(clickEvent -> {
+			// test solver
+			SolverFactory<TimeTable> solverFactory = SolverFactory
+					.create(new SolverConfig().withSolutionClass(TimeTable.class).withEntityClasses(Evaluation.class)
+							.withConstraintProviderClass(TimeTableConstraintProvider.class)
+							// The solver runs only for 5 seconds on this small dataset.
+							// It's recommended to run for at least 5 minutes ("5m") otherwise.
+							.withTerminationSpentLimit(Duration.ofSeconds(5)));
+
+			// Load the problem
+			TimeTable problem = generateDemoData();
+
+			// Solve the problem
+			Solver<TimeTable> solver = solverFactory.buildSolver();
+			TimeTable solution = solver.solve(problem);
+
+			// Visualize the solution
+			printTimetable(solution);
+		});
+		FullCalendar calendar = createCalendar();
+    	add(calendar);
+    	//this.setFlexGrow(1, calendar);
+    	calendar.setHeightByParent(); // calculate the height by parent
+    	calendar.getElement().getStyle().set("flex-grow", "1");
+		add(cmdSolve);
+
+    	
+		setSizeFull();
+		setJustifyContentMode(JustifyContentMode.CENTER);
+		setDefaultHorizontalComponentAlignment(Alignment.STRETCH);
+		getStyle().set("text-align", "center");;
+
+	}
+
+    protected FullCalendar createCalendar() {
+
+    	// Create a new calendar instance and attach it to our layout
+    	FullCalendar calendar = FullCalendarBuilder.create().build();
+
+    	// Create a initial sample entry
+    	Entry entry = new Entry();
+    	entry.setTitle("Some event");
+    	entry.setColor("#ff3333");
+
+    	// the given times will be interpreted as utc based - useful when the times are fetched from your database
+    	entry.setStart(LocalDate.now().withDayOfMonth(3).atTime(10, 0));
+    	entry.setEnd(entry.getStart().plusHours(2));
+    	// load items from backend
+    	List<Entry> entryList= new ArrayList<Entry>();
+    	//List<Entry> entryList = backend.streamEntries().collect(Collectors.toList());
+
+    	// init lazy loading provider based on given collection - does NOT use the collection as backend as ListDataProvider does
+    	LazyInMemoryEntryProvider<Entry> entryProvider = EntryProvider.lazyInMemoryFromItems(entryList);
+
+    	// set entry provider
+    	calendar.setEntryProvider(entryProvider);
+
+    	// CRUD operations
+    	// to add
+    	entryProvider.addEntries(entry); // register in data provider
+    	entryProvider.refreshAll();         // call refresh to inform the client about the data change and trigger a refetch
+
+
+    	return calendar;
+    	}
+    
+	
+	public TimeTable generateDemoData() {
+		TimeTable timeTable = new TimeTable();
+
+		List<Timeslot> timeslotList = timeslotService.findAll();
+
+		List<org.exporecerca.planner.data.entity.Contestant> contestantList = contestantService.findAll();
+
+		ArrayList<Evaluation> evaluationList = new ArrayList<Evaluation>();
+
+		Integer id = 0;
+		for (Timeslot timeslot : timeslotList) {
+			for (Contestant contestant : contestantList) {
+				evaluationList.add(new Evaluation(id++, contestant, timeslot));
+			}
+		};
+
+		timeTable.setJuryList(juryService.findAll());
+		timeTable.setContestantList(contestantService.findAll());
+		timeTable.setTimeslotList(timeslotList);
+		timeTable.setEvaluationList(evaluationList);
+
+		return timeTable;
+	}
+
+	private void printTimetable(TimeTable timeTable) {
+		for (Evaluation evaluation:timeTable.getEvaluationList()) {
+			System.out.println (evaluation.getTimeslot().getStartTime());
+			System.out.println (evaluation.getContestant());
+			System.out.println (evaluation.getJury());
+			System.out.println ("----------------------------------------------------");
+		}
+	}
 
 }

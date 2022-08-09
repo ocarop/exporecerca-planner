@@ -11,7 +11,6 @@ import org.optaplanner.core.api.domain.lookup.PlanningId;
 @MappedSuperclass
 public abstract class AbstractEntity {
 
-	@PlanningId
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;

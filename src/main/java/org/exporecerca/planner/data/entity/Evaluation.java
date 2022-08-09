@@ -4,24 +4,41 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
+import org.optaplanner.core.api.domain.lookup.PlanningId;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
 @PlanningEntity
 @Entity
 public class Evaluation extends AbstractEntity {
 
-	@PlanningVariable
+	
+	
+	@PlanningVariable(valueRangeProviderRefs = "juryRange")
 	@ManyToOne
 	private Jury jury;
 	
-	@PlanningVariable
 	@ManyToOne
 	private Contestant contestant;
 	
 	@ManyToOne
 	private Timeslot timeslot;
 
-	
+    // No-arg constructor required for Hibernate and OptaPlanner
+    public Evaluation() {
+    }
+    
+    @Override
+    @PlanningId
+	public Integer getId() {
+		return super.getId();
+	}
+
+    
+	public Evaluation(Integer id, Contestant contestant, Timeslot timeslot) {
+		this.setId(id);
+		this.contestant=contestant;
+		this.timeslot=timeslot;
+	}
 	public Jury getJury() {
 		return jury;
 	}
