@@ -19,6 +19,7 @@ package org.exporecerca.planner.solver;
 import java.time.Duration;
 
 import org.exporecerca.planner.data.entity.Evaluation;
+import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore;
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.score.stream.Constraint;
 import org.optaplanner.core.api.score.stream.ConstraintFactory;
@@ -31,12 +32,15 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
     public Constraint[] defineConstraints(ConstraintFactory constraintFactory) {
         return new Constraint[] {
                 // Hard constraints
-                juryConflict(constraintFactory),
-                contestantConflict(constraintFactory)
+        		juryConflictTimeslot(constraintFactory),
+                contestantConflictTimeslot(constraintFactory),
+                alreadyEvaluatedByJuryConflict(constraintFactory),
+                notAssigned(constraintFactory)
+                
         };
     }
 
-    Constraint juryConflict(ConstraintFactory constraintFactory) {
+    Constraint juryConflictTimeslot(ConstraintFactory constraintFactory) {
         // A jury can evaluate 1 contestant at same time
         return constraintFactory
                 // Select each pair of 2 different evaluations ...
@@ -46,17 +50,36 @@ public class TimeTableConstraintProvider implements ConstraintProvider {
                         // ... the same jury ...
                         Joiners.equal(Evaluation::getJury))
                 // ... and penalize each pair with a hard weight.
-                .penalize("Jury conflict", HardSoftScore.ONE_HARD);
+                .penalize("Jury conflict", HardMediumSoftScore.ONE_HARD);
     }
 
-    Constraint contestantConflict(ConstraintFactory constraintFactory) {
+    Constraint contestantConflictTimeslot(ConstraintFactory constraintFactory) {
         // A contestant shows their project to one Judge at the same time.
         return constraintFactory
                 .forEachUniquePair(Evaluation.class,
+                		// ... in the same timeslot ...
                         Joiners.equal(Evaluation::getTimeslot),
+                        // ... same contestant ...
                         Joiners.equal(Evaluation::getContestant))
-                .penalize("Contestant conflict", HardSoftScore.ONE_HARD);
+                .penalize("Contestant conflict", HardMediumSoftScore.ONE_HARD);
     }
 
-  
+    Constraint alreadyEvaluatedByJuryConflict(ConstraintFactory constraintFactory) {
+        // A jury can evaluate 1 contestant just once
+        return constraintFactory
+                // Select each pair of 2 different evaluations ...
+                .forEachUniquePair(Evaluation.class,
+                        // ... in the same timeslot ...
+                        Joiners.equal(Evaluation::getContestant),
+                        // ... the same jury ...
+                        Joiners.equal(Evaluation::getJury))
+                // ... and penalize each pair with a hard weight.
+                .penalize("already Evaluated", HardMediumSoftScore.ONE_HARD);
+    }
+ 
+    private Constraint notAssigned(ConstraintFactory factory) {
+        return factory.forEachIncludingNullVars(Evaluation.class)
+                .filter(Evaluation::isUnassigned)
+                .penalize("Slot unassigned", HardMediumSoftScore.ONE_MEDIUM);
+    }
 }

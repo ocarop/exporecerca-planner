@@ -13,7 +13,7 @@ public class Evaluation extends AbstractEntity {
 
 	
 	
-	@PlanningVariable(valueRangeProviderRefs = "juryRange")
+	@PlanningVariable(valueRangeProviderRefs = "juryRange",nullable=true)
 	@ManyToOne
 	private Jury jury;
 	
@@ -60,5 +60,7 @@ public class Evaluation extends AbstractEntity {
 		this.timeslot = timeslot;
 	}
 	
-	
+	public  boolean isUnassigned(){
+		return jury==null;
+	}
 }
