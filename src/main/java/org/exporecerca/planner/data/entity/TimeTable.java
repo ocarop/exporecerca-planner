@@ -34,7 +34,8 @@ public class TimeTable {
     @ProblemFactCollectionProperty
     private List<Timeslot> timeslotList;
 
-    @ValueRangeProvider(id = "juryRange")
+    /*
+    @ValueRangeProvider(id = "juryRange")*/
     @ProblemFactCollectionProperty
     private List<Jury> juryList;
 

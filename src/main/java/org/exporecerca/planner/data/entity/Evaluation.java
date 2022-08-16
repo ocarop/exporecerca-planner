@@ -1,10 +1,13 @@
 package org.exporecerca.planner.data.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
 import org.optaplanner.core.api.domain.entity.PlanningEntity;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
+import org.optaplanner.core.api.domain.valuerange.ValueRangeProvider;
 import org.optaplanner.core.api.domain.variable.PlanningVariable;
 
 @PlanningEntity
@@ -63,4 +66,9 @@ public class Evaluation extends AbstractEntity {
 	public  boolean isUnassigned(){
 		return jury==null;
 	}
+	
+    @ValueRangeProvider(id = "juryRange")
+    public List<Jury> getPossibleJuryList() {
+        return getContestant().getTopic().getPossibleJuryList();
+    }
 }

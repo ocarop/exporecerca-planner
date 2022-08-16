@@ -4,6 +4,9 @@ import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -31,6 +34,9 @@ public class Contestant extends AbstractEntity {
 	
 	@Column(nullable=true, length=30)
     private String phone;
+	
+	@ManyToOne
+	private Topic topic;
 
     public String getFirstName() {
         return firstName;
@@ -56,6 +62,15 @@ public class Contestant extends AbstractEntity {
     public void setPhone(String phone) {
         this.phone = phone;
     }
+    
+    
+    
+	public Topic getTopic() {
+		return topic;
+	}
+	public void setTopic(Topic topic) {
+		this.topic = topic;
+	}
 	@Override
 	public String toString() {
 		return "Contestant [firstName=" + firstName + ", lastName=" + lastName + "]";

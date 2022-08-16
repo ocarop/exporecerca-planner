@@ -7,6 +7,7 @@ import javax.annotation.security.PermitAll;
 
 import org.exporecerca.planner.data.service.ContestantService;
 import org.exporecerca.planner.data.service.JuryService;
+import org.exporecerca.planner.data.service.TopicService;
 import org.exporecerca.planner.data.entity.Contestant;
 import org.exporecerca.planner.data.entity.Jury;
 import org.exporecerca.planner.data.entity.Topic;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
+import org.vaadin.crudui.form.impl.field.provider.ComboBoxProvider;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.UI;
@@ -66,7 +68,7 @@ public class ContestantFormView extends Div implements BeforeEnterObserver {
 
     
     @Autowired
-    public ContestantFormView(ContestantService contestantService) {
+    public ContestantFormView(ContestantService contestantService,TopicService topicService) {
         // crud instance
         GridCrud<Contestant> crud = new GridCrud<>(Contestant.class);
 
@@ -77,8 +79,9 @@ public class ContestantFormView extends Div implements BeforeEnterObserver {
         // form configuration
         crud.getCrudFormFactory().setUseBeanValidation(true);
         crud.getCrudFormFactory().setVisibleProperties(
-                "firstName", "lastName", "email", "phone", "topics");
-
+                "firstName", "lastName", "email", "phone", "topic");
+        crud.getCrudFormFactory().setFieldProvider("topic",
+                new ComboBoxProvider<Topic>("Topic", topicService.findAll()));
  
         // layout configuration
         setSizeFull();

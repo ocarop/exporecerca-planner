@@ -7,7 +7,10 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -35,8 +38,12 @@ public class Jury extends AbstractEntity {
 	@Column(nullable=true, length=30)
     private String phone;
     
-    @OneToMany(fetch=FetchType.EAGER)
-    private Set<Topic> topics;
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			  name = "jury_topics", 
+			  joinColumns = @JoinColumn(name = "jury_id"), 
+			  inverseJoinColumns = @JoinColumn(name = "topic_id"))
+	private Set<Topic> topics;
     
     public String getFirstName() {
         return firstName;
@@ -71,7 +78,7 @@ public class Jury extends AbstractEntity {
 	
 	@Override
 	public String toString() {
-		return "Jury [firstName=" + firstName + ", lastName=" + lastName + "]";
+		return  firstName + " " + lastName ;
 	}
 
 
