@@ -1,11 +1,13 @@
-package org.exporecerca.planner.views.about;
+package org.exporecerca.planner.views.planner;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Image;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
@@ -16,7 +18,9 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -40,21 +44,25 @@ import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
 import org.vaadin.stefan.fullcalendar.FullCalendarScheduler;
+import org.vaadin.stefan.fullcalendar.ResourceEntry;
 import org.vaadin.stefan.fullcalendar.SchedulerView;
+import org.vaadin.stefan.fullcalendar.Entry.RenderingMode;
+import org.vaadin.stefan.fullcalendar.dataprovider.EagerInMemoryEntryProvider;
 import org.vaadin.stefan.fullcalendar.dataprovider.EntryProvider;
 import org.vaadin.stefan.fullcalendar.dataprovider.LazyInMemoryEntryProvider;
 
-@PageTitle("About")
-@Route(value = "about", layout = MainLayout.class)
+@PageTitle("Planner")
+@Route(value = "planner", layout = MainLayout.class)
 @AnonymousAllowed
-public class AboutView extends VerticalLayout {
+public class PlannerView extends VerticalLayout {
 
 	TimeslotService timeslotService;
 	ContestantService contestantService;
 	JuryService juryService;
 	FullCalendar calendar;
+	PlannerViewToolbar toolbar;
 
-	public AboutView(TimeslotService timeslotService, ContestantService contestantService, JuryService juryService) {
+	public PlannerView(TimeslotService timeslotService, ContestantService contestantService, JuryService juryService) {
 		this.timeslotService = timeslotService;
 		this.contestantService = contestantService;
 		this.juryService = juryService;
@@ -81,6 +89,26 @@ public class AboutView extends VerticalLayout {
 			printTimetable(solution);
 		});
 		calendar = createCalendar();
+		
+        toolbar = new PlannerViewToolbar(calendar,true,true,true,true,true);
+
+        calendar.setHeightByParent();
+
+        calendar.addEntryClickedListener(event -> {
+            if (event.getEntry().getRenderingMode() != RenderingMode.BACKGROUND && event.getEntry().getRenderingMode() != RenderingMode.INVERSE_BACKGROUND) {
+                DemoDialog dialog = new DemoDialog(event.getEntry(), false);
+                dialog.open();
+            }
+        });
+
+            add(toolbar);
+            setHorizontalComponentAlignment(Alignment.CENTER, toolbar);
+
+        setFlexGrow(1, calendar);
+        setHorizontalComponentAlignment(Alignment.STRETCH, calendar);
+		
+		
+		
 		HorizontalLayout menu = new HorizontalLayout();
 		menu.setWidthFull();
 		add(menu);
@@ -102,7 +130,7 @@ public class AboutView extends VerticalLayout {
 	protected FullCalendar createCalendar() {
 
 		// Create a new calendar instance and attach it to our layout
-		FullCalendar calendar = FullCalendarBuilder.create().build();
+		FullCalendar calendar = FullCalendarBuilder.create().withScheduler().build();
 		calendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
 		// Create a initial sample entry
 		Entry entry = new Entry();
@@ -182,11 +210,24 @@ public class AboutView extends VerticalLayout {
 		}
 		// init lazy loading provider based on given collection - does NOT use the
 		// collection as backend as ListDataProvider does
-		LazyInMemoryEntryProvider<Entry> entryProvider = EntryProvider.lazyInMemoryFromItems(entryList);
+//test entry
+        Entry entry = new Entry();
+        LocalDate now = LocalDate.now();
+        entry.setTitle("Meeting 12");
+        entry.setStart(now.withDayOfMonth(17).atTime(11, 30));
+        entry.setEnd(entry.getStart().plus(30, ChronoUnit.MINUTES));
+        entry.setAllDay(false);
+        entry.setColor("mediumseagreen");
+        entry.setCustomProperty("description", "Description of meeting 12" );
+        entry.setEditable(true);
+        entryList.add(entry);
+        LazyInMemoryEntryProvider<Entry> entryProvider = EntryProvider.lazyInMemoryFromItems(entryList);
 		calendar.gotoDate(minTime.toLocalDate());
 		// set entry provider
 		calendar.setEntryProvider(entryProvider);
-		entryProvider.refreshAll();
+		//entryProvider.refreshAll();
+
 	}
+
 
 }

@@ -19,11 +19,11 @@ import org.exporecerca.planner.components.appnav.AppNav;
 import org.exporecerca.planner.components.appnav.AppNavItem;
 import org.exporecerca.planner.data.entity.User;
 import org.exporecerca.planner.security.AuthenticatedUser;
-import org.exporecerca.planner.views.about.AboutView;
 import org.exporecerca.planner.views.contestantform.ContestantFormView;
 import org.exporecerca.planner.views.juryform.JuryFormView;
 import org.exporecerca.planner.views.masterdetail.MasterDetailView;
 import org.exporecerca.planner.views.masterdetail.TimeSlotFormView;
+import org.exporecerca.planner.views.planner.PlannerView;
 import org.exporecerca.planner.views.topic.TopicFormView;
 
 /**
@@ -86,8 +86,8 @@ public class MainLayout extends AppLayout {
         if (accessChecker.hasAccess(TimeSlotFormView.class)) {
             nav.addItem(new AppNavItem("Time slots", TimeSlotFormView.class, "la la-calendar"));
         }
-        if (accessChecker.hasAccess(AboutView.class)) {
-            nav.addItem(new AppNavItem("About", AboutView.class, "la la-file"));
+        if (accessChecker.hasAccess(PlannerView.class)) {
+            nav.addItem(new AppNavItem("About", PlannerView.class, "la la-file"));
         }
 
         return nav;
