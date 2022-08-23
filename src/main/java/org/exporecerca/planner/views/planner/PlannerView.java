@@ -48,6 +48,7 @@ import org.vaadin.stefan.fullcalendar.FullCalendar;
 import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
 import org.vaadin.stefan.fullcalendar.FullCalendarScheduler;
 import org.vaadin.stefan.fullcalendar.ResourceEntry;
+import org.vaadin.stefan.fullcalendar.Scheduler;
 import org.vaadin.stefan.fullcalendar.SchedulerView;
 import org.vaadin.stefan.fullcalendar.Timezone;
 import org.vaadin.stefan.fullcalendar.Entry.RenderingMode;
@@ -135,6 +136,7 @@ public class PlannerView extends VerticalLayout {
 
 		// Create a new calendar instance and attach it to our layout
 		FullCalendar calendar = FullCalendarBuilder.create().withScheduler().build();
+		((Scheduler) calendar).setSchedulerLicenseKey("CC-Attribution-NonCommercial-NoDerivatives");
 		calendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
 		Timezone timezoneMadrid=new Timezone(ZoneId.of("Europe/Madrid"));
 		calendar.setTimezone(timezoneMadrid);
