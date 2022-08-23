@@ -17,7 +17,7 @@ import com.vaadin.flow.component.select.Select;
 import lombok.Builder;
 import org.apache.commons.lang3.StringUtils;
 import org.vaadin.stefan.fullcalendar.*;
-import org.vaadin.stefan.fullcalendar.dataprovider.EagerInMemoryEntryProvider;
+import org.vaadin.stefan.fullcalendar.dataprovider.*;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -116,7 +116,7 @@ public class PlannerViewToolbar extends MenuBar {
 			entry.setStart(LocalDate.now().atTime(10, 0));
 			entry.setEnd(LocalDate.now().atTime(11, 0));
 			entry.setTitle("Single entry");
-			((EagerInMemoryEntryProvider<Entry>) calendar.getEntryProvider()).addEntries(entry);
+			((LazyInMemoryEntryProvider<Entry>) calendar.getEntryProvider()).addEntries(entry);
 
 			Notification.show("Added a single entry for today");
 		});

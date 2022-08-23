@@ -13,7 +13,7 @@ import org.exporecerca.planner.security.AuthenticatedUser;
 
 @PageTitle("Login")
 @Route(value = "login")
-@PermitAll
+//@PermitAll
 public class LoginView extends LoginOverlay implements BeforeEnterObserver {
 
     private final AuthenticatedUser authenticatedUser;

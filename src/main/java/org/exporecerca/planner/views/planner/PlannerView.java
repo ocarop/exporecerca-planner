@@ -18,6 +18,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +26,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.validation.constraints.NotNull;
 
 import org.exporecerca.planner.data.entity.Contestant;
 import org.exporecerca.planner.data.entity.Evaluation;
@@ -46,6 +49,7 @@ import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
 import org.vaadin.stefan.fullcalendar.FullCalendarScheduler;
 import org.vaadin.stefan.fullcalendar.ResourceEntry;
 import org.vaadin.stefan.fullcalendar.SchedulerView;
+import org.vaadin.stefan.fullcalendar.Timezone;
 import org.vaadin.stefan.fullcalendar.Entry.RenderingMode;
 import org.vaadin.stefan.fullcalendar.dataprovider.EagerInMemoryEntryProvider;
 import org.vaadin.stefan.fullcalendar.dataprovider.EntryProvider;
@@ -132,11 +136,14 @@ public class PlannerView extends VerticalLayout {
 		// Create a new calendar instance and attach it to our layout
 		FullCalendar calendar = FullCalendarBuilder.create().withScheduler().build();
 		calendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
+		Timezone timezoneMadrid=new Timezone(ZoneId.of("Europe/Madrid"));
+		calendar.setTimezone(timezoneMadrid);
 		// Create a initial sample entry
 		Entry entry = new Entry();
 		entry.setTitle("Contestant <br/> Jury <br/>");
 		entry.setColor("#ff3333");
 
+		
 		// the given times will be interpreted as utc based - useful when the times are
 		// fetched from your database
 		entry.setStart(LocalDate.now().withDayOfMonth(3).atTime(10, 0));
