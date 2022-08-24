@@ -34,6 +34,7 @@ import org.exporecerca.planner.data.entity.Evaluation;
 import org.exporecerca.planner.data.entity.TimeTable;
 import org.exporecerca.planner.data.entity.Timeslot;
 import org.exporecerca.planner.data.service.ContestantService;
+import org.exporecerca.planner.data.service.EvaluationService;
 import org.exporecerca.planner.data.service.JuryService;
 import org.exporecerca.planner.data.service.TimeslotService;
 import org.exporecerca.planner.solver.TimeTableConstraintProvider;
@@ -41,18 +42,14 @@ import org.exporecerca.planner.views.MainLayout;
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 import org.optaplanner.core.config.solver.SolverConfig;
-import org.vaadin.stefan.fullcalendar.CalendarView;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
 import org.vaadin.stefan.fullcalendar.FullCalendarBuilder;
-import org.vaadin.stefan.fullcalendar.FullCalendarScheduler;
-import org.vaadin.stefan.fullcalendar.ResourceEntry;
 import org.vaadin.stefan.fullcalendar.Scheduler;
-import org.vaadin.stefan.fullcalendar.SchedulerView;
 import org.vaadin.stefan.fullcalendar.Timezone;
 import org.vaadin.stefan.fullcalendar.Entry.RenderingMode;
-import org.vaadin.stefan.fullcalendar.dataprovider.EagerInMemoryEntryProvider;
+import org.vaadin.stefan.fullcalendar.dataprovider.CallbackEntryProvider;
 import org.vaadin.stefan.fullcalendar.dataprovider.EntryProvider;
 import org.vaadin.stefan.fullcalendar.dataprovider.LazyInMemoryEntryProvider;
 
@@ -61,16 +58,20 @@ import org.vaadin.stefan.fullcalendar.dataprovider.LazyInMemoryEntryProvider;
 @AnonymousAllowed
 public class PlannerView extends VerticalLayout {
 
-	TimeslotService timeslotService;
-	ContestantService contestantService;
-	JuryService juryService;
-	FullCalendar calendar;
-	PlannerViewToolbar toolbar;
+	private TimeslotService timeslotService;
+	private ContestantService contestantService;
+	private JuryService juryService;
+	private FullCalendar calendar;
+	private PlannerViewToolbar toolbar;
+    private EvaluationService evaluationService;
+    private EntryProvider<Entry> entryProvider;
+	
 
-	public PlannerView(TimeslotService timeslotService, ContestantService contestantService, JuryService juryService) {
+	public PlannerView(TimeslotService timeslotService, ContestantService contestantService, JuryService juryService, EvaluationService evaluationService) {
 		this.timeslotService = timeslotService;
 		this.contestantService = contestantService;
 		this.juryService = juryService;
+		this.evaluationService=evaluationService;
 
 		setSpacing(false);
 		Button cmdSolve = new Button("Solve");
@@ -84,7 +85,7 @@ public class PlannerView extends VerticalLayout {
 							.withTerminationSpentLimit(Duration.ofSeconds(15)));
 
 			// Load the problem
-			TimeTable problem = generateDemoData();
+			TimeTable problem = generatePanningSolution();
 
 			// Solve the problem
 			Solver<TimeTable> solver = solverFactory.buildSolver();
@@ -128,7 +129,6 @@ public class PlannerView extends VerticalLayout {
 		setJustifyContentMode(JustifyContentMode.CENTER);
 		setDefaultHorizontalComponentAlignment(Alignment.STRETCH);
 		getStyle().set("text-align", "center");
-		;
 
 	}
 
@@ -140,36 +140,29 @@ public class PlannerView extends VerticalLayout {
 		calendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
 		Timezone timezoneMadrid=new Timezone(ZoneId.of("Europe/Madrid"));
 		calendar.setTimezone(timezoneMadrid);
-		// Create a initial sample entry
-		Entry entry = new Entry();
-		entry.setTitle("Contestant <br/> Jury <br/>");
-		entry.setColor("#ff3333");
 
-		
-		// the given times will be interpreted as utc based - useful when the times are
-		// fetched from your database
-		entry.setStart(LocalDate.now().withDayOfMonth(3).atTime(10, 0));
-		entry.setEnd(entry.getStart().plusHours(2));
-		// load items from backend
-		List<Entry> entryList = new ArrayList<Entry>();
-		// List<Entry> entryList = backend.streamEntries().collect(Collectors.toList());
-
-		// init lazy loading provider based on given collection - does NOT use the
-		// collection as backend as ListDataProvider does
-		LazyInMemoryEntryProvider<Entry> entryProvider = EntryProvider.lazyInMemoryFromItems(entryList);
+		CallbackEntryProvider<Entry> entryProvider = createEntryProvider();
 
 		// set entry provider
 		calendar.setEntryProvider(entryProvider);
 
-		// CRUD operations
-		// to add
-		entryProvider.addEntries(entry); // register in data provider
-		entryProvider.refreshAll(); // call refresh to inform the client about the data change and trigger a refetch
+		//entryProvider.refreshAll(); // call refresh to inform the client about the data change and trigger a refetch
 
 		return calendar;
 	}
 
-	public TimeTable generateDemoData() {
+    protected CallbackEntryProvider<Entry> createEntryProvider() {
+    	//Creates entryprovider from backend. EvaluationService returns filtered enry streams 
+        CallbackEntryProvider<Entry> entryProvider = EntryProvider.fromCallbacks(
+                query -> evaluationService.streamEntries(query),
+                entryId -> evaluationService.getEntry(entryId)
+        );
+
+        return entryProvider;
+    }
+    
+	public TimeTable generatePanningSolution() {
+		evaluationService.deleteAll();
 		TimeTable timeTable = new TimeTable();
 
 		List<Timeslot> timeslotList = timeslotService.findAll();
@@ -181,7 +174,9 @@ public class PlannerView extends VerticalLayout {
 		Integer id = 0;
 		for (Timeslot timeslot : timeslotList) {
 			for (Contestant contestant : contestantList) {
-				evaluationList.add(new Evaluation(id++, contestant, timeslot));
+				Evaluation evaluation = new Evaluation(contestant, timeslot);
+				evaluation = evaluationService.save(evaluation);
+				evaluationList.add(evaluation);
 			}
 		}
 		;

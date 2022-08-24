@@ -37,8 +37,7 @@ public class Evaluation extends AbstractEntity {
 	}
 
     
-	public Evaluation(Integer id, Contestant contestant, Timeslot timeslot) {
-		this.setId(id);
+	public Evaluation(Contestant contestant, Timeslot timeslot) {
 		this.contestant=contestant;
 		this.timeslot=timeslot;
 	}
