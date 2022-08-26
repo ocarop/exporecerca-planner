@@ -42,6 +42,7 @@ import org.exporecerca.planner.views.MainLayout;
 import org.optaplanner.core.api.solver.Solver;
 import org.optaplanner.core.api.solver.SolverFactory;
 import org.optaplanner.core.config.solver.SolverConfig;
+import org.vaadin.stefan.fullcalendar.CalendarLocale;
 import org.vaadin.stefan.fullcalendar.CalendarViewImpl;
 import org.vaadin.stefan.fullcalendar.Entry;
 import org.vaadin.stefan.fullcalendar.FullCalendar;
@@ -140,6 +141,7 @@ public class PlannerView extends VerticalLayout {
 		calendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
 		Timezone timezoneMadrid=new Timezone(ZoneId.of("Europe/Madrid"));
 		calendar.setTimezone(timezoneMadrid);
+		calendar.setLocale(CalendarLocale.SPANISH);
 
 		CallbackEntryProvider<Entry> entryProvider = createEntryProvider();
 

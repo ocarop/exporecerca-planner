@@ -13,8 +13,15 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 @Entity
+@Getter @Setter
 public class Topic extends AbstractEntity {
+
 
 	@NotNull
 	@Size(min = 1, max = 50, message="Size must be between 1 an 50 characters")
@@ -27,21 +34,12 @@ public class Topic extends AbstractEntity {
 			  inverseJoinColumns = @JoinColumn(name = "jury_id"))
 	List<Jury> possibleJuryList;
 
-	public String getName() {
-		return name;
+	public Topic(String name) {
+		this.name=name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public Topic() {
+		super();
 	}
 	
-
-	@Override
-	public String toString() {
-		return  name ;
-	}
-
-	public List<Jury> getPossibleJuryList() {
-		return possibleJuryList;
-	}	
 }

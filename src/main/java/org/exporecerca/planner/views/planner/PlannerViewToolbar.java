@@ -53,10 +53,6 @@ public class PlannerViewToolbar extends MenuBar {
 			boolean viewChangeable, boolean dateChangeable) {
 
 		this.calendar = calendar;
-		if (calendar == null) {
-			throw new IllegalArgumentException("Calendar instance is required");
-		}
-
 		this.allTimezones = allTimezones;
 		this.allLocales = allLocales;
 		this.editable = editable;
@@ -81,7 +77,6 @@ public class PlannerViewToolbar extends MenuBar {
 			initEditItems();
 		}
 
-		initGeneralSettings();
 
 	}
 
@@ -133,52 +128,6 @@ public class PlannerViewToolbar extends MenuBar {
 		return calendarItems;
 	}
 
-	private SubMenu initGeneralSettings() {
-		SubMenu subMenu = addItem("Settings").getSubMenu();
-
-		List<Locale> items = Arrays.asList(CalendarLocale.getAvailableLocales());
-		ComboBox<Locale> localeSelector = new ComboBox<>("Locale");
-		localeSelector.setClearButtonVisible(true);
-		localeSelector.setItems(items);
-		localeSelector.setValue(CalendarLocale.getDefault());
-		localeSelector.addValueChangeListener(event -> {
-			Locale value = event.getValue();
-			calendar.setLocale(value != null ? value : CalendarLocale.getDefault());
-			Notification.show("Locale changed to " + calendar.getLocale().toLanguageTag());
-		});
-		localeSelector.setPreventInvalidInput(true);
-
-		timezoneSelector = new Select<>();
-		timezoneSelector.setLabel("Timezone");
-		timezoneSelector.setItemLabelGenerator(Timezone::getClientSideValue);
-		if (allTimezones) {
-			timezoneSelector.setItems(Timezone.getAvailableZones());
-		} else {
-			timezoneSelector.setItems(SOME_TIMEZONES);
-		}
-
-		timezoneSelector.setValue(Timezone.UTC);
-		timezoneSelector.addValueChangeListener(event -> {
-			if (!Objects.equals(calendar.getTimezone(), event.getValue())) {
-				Timezone value = event.getValue();
-				calendar.setTimezone(value != null ? value : Timezone.UTC);
-				Notification.show("Timezone changed to " + calendar.getTimezone());
-			}
-		});
-
-		subMenu.add(localeSelector, timezoneSelector);
-
-//        subMenu.addItem("Detach/Attach Calendar", event -> {
-//            if (calendar.getParent().isPresent()) {
-//                calendarParent = (HasComponents) calendar.getParent().get();
-//                calendarParent.remove(calendar);
-//            } else if (calendarParent != null) {
-//                calendarParent.add(calendar);
-//            }
-//        });
-
-		return subMenu;
-	}
 
 	private void initViewSelector() {
 		List<CalendarView> calendarViews;
