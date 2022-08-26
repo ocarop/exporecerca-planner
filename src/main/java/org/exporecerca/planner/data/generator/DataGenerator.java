@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @SpringComponent
 public class DataGenerator {
 
+	/*
     @Bean
     public CommandLineRunner loadData(PasswordEncoder passwordEncoder, SamplePersonRepository samplePersonRepository,
             UserRepository userRepository) {
@@ -62,5 +63,5 @@ public class DataGenerator {
             logger.info("Generated demo data");
         };
     }
-
+*/
 }
