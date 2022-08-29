@@ -48,4 +48,9 @@ public class TopicService {
         return (int) repository.count();
     }
 
+	public void save(Topic topic) {
+		repository.save(topic);
+		
+	}
+
 }

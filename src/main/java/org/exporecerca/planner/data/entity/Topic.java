@@ -24,7 +24,7 @@ public class Topic extends AbstractEntity {
 
 
 	@NotNull
-	@Size(min = 1, max = 50, message="Size must be between 1 an 50 characters")
+	@Size(min = 1, max = 150, message="Size must be between 1 an 150 characters")
 	private String name;
 
 	@ManyToMany(fetch = FetchType.EAGER)
