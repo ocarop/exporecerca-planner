@@ -47,5 +47,8 @@ public class JuryService {
     public  List<Jury> findAll() {
         return repository.findAll();
     }
-   
+
+	public void save(Jury jury) {
+		repository.save(jury);	
+	}
 }

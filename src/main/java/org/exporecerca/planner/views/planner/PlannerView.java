@@ -199,7 +199,6 @@ public class PlannerView extends VerticalLayout {
 		LocalDateTime minTime = null;
 		for (Evaluation evaluation : timeTable.getEvaluationList()) {
 			Entry entry = new Entry();
-
 			if (minTime == null)
 				minTime = evaluation.getTimeslot().getStartTime();
 			else if (minTime.isAfter(evaluation.getTimeslot().getStartTime()))
@@ -209,9 +208,12 @@ public class PlannerView extends VerticalLayout {
 			entry.setStart(evaluation.getTimeslot().getStartTime());
 			entry.setEnd(evaluation.getTimeslot().getEndTime());
 			if (evaluation.getJury()!=null)
-				entry.setTitle(evaluation.getContestant().getLastName() + "\\" + evaluation.getJury().getLastName());
+				entry.setTitle(evaluation.getContestant().getCode() + "\\" + evaluation.getJury().getLastName());
 			else
 				entry.setTitle("not assigned");
+			String color=null;
+			color=evaluation.getContestant().getTopic().getColor();
+			entry.setColor(color);
 			entryList.add(entry);
 		}
 		// init lazy loading provider based on given collection - does NOT use the

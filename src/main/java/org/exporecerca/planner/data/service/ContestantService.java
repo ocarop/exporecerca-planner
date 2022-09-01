@@ -49,5 +49,10 @@ public class ContestantService {
 		return repository.findAll();
 	}
 
+	public void save(Contestant contestant) {
+		repository.save(contestant);
+		
+	}
+
 
 }

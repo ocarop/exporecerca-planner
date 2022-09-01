@@ -25,10 +25,12 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 
 @PageTitle("Topic")
 @Route(value = "topic/:topicID?/:action?(edit)", layout = MainLayout.class)
-@RolesAllowed("ADMIN")
+//@RolesAllowed("ADMIN")
+@AnonymousAllowed
 @Uses(Icon.class)
 public class TopicFormView extends Div implements BeforeEnterObserver {
 	@Autowired
@@ -45,6 +47,7 @@ public class TopicFormView extends Div implements BeforeEnterObserver {
 		crud.setAddOperation(topicService::update);
 		crud.setUpdateOperation(topicService::update);
 		crud.setDeleteOperation(topicService::delete);
+		crud.getGrid().setColumns("name","color","possibleJuryList");
 		add(crud);
 
 		MemoryBuffer memoryBuffer = new MemoryBuffer();

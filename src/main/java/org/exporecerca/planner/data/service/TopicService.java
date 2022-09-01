@@ -53,4 +53,8 @@ public class TopicService {
 		
 	}
 
+	public Topic findByName(String topic) {
+		return repository.findByName(topic);
+	}
+
 }

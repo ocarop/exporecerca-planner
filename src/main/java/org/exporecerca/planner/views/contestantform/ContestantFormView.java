@@ -1,5 +1,6 @@
 package org.exporecerca.planner.views.contestantform;
 
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import javax.annotation.security.PermitAll;
 import org.exporecerca.planner.data.service.ContestantService;
 import org.exporecerca.planner.data.service.JuryService;
 import org.exporecerca.planner.data.service.TopicService;
+import org.exporecerca.planner.excel.ExcelService;
 import org.exporecerca.planner.data.entity.Contestant;
 import org.exporecerca.planner.data.entity.Jury;
 import org.exporecerca.planner.data.entity.Topic;
@@ -30,20 +32,25 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
 
 @PageTitle("Contestant Form")
 @Route(value = "contestant-form/:samplePersonID?/:action?(edit)", layout = MainLayout.class)
-@PermitAll
+//@PermitAll
+@AnonymousAllowed
 public class ContestantFormView extends Div implements BeforeEnterObserver {
 
     private final String SAMPLEPERSON_ID = "samplePersonID";
@@ -68,7 +75,7 @@ public class ContestantFormView extends Div implements BeforeEnterObserver {
 
     
     @Autowired
-    public ContestantFormView(ContestantService contestantService,TopicService topicService) {
+    public ContestantFormView(ContestantService contestantService,TopicService topicService, ExcelService excelService) {
         // crud instance
         GridCrud<Contestant> crud = new GridCrud<>(Contestant.class);
 
@@ -92,7 +99,24 @@ public class ContestantFormView extends Div implements BeforeEnterObserver {
 		crud.setUpdateOperation(contestantService::update);
 		crud.setDeleteOperation(contestantService::delete);	
         add(crud);
+		MemoryBuffer memoryBuffer = new MemoryBuffer();
+		Upload singleFileUpload = new Upload(memoryBuffer);
 
+		singleFileUpload.addSucceededListener(event -> {
+			// Get information about the uploaded file
+			InputStream fileData = memoryBuffer.getInputStream();
+			String fileName = event.getFileName();
+			long contentLength = event.getContentLength();
+			String mimeType = event.getMIMEType();
+
+			String log = excelService.importContestants(fileData, contestantService,topicService);
+			if (log.equals("")) {
+				Notification.show("Juries imported succesfully", 10000, Position.TOP_CENTER);
+				crud.refreshGrid();
+			} else
+				Notification.show(log, 10000, Position.TOP_CENTER);
+		});
+		add(singleFileUpload);
     }
 
     @Override

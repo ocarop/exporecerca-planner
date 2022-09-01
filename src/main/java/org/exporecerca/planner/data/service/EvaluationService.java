@@ -67,7 +67,7 @@ public class EvaluationService {
 		entry.setStart(evaluation.getTimeslot().getStartTime());
 		entry.setEnd(evaluation.getTimeslot().getEndTime());
 		if (evaluation.getJury()!=null)
-			entry.setTitle(evaluation.getContestant().getLastName() + "\\" + evaluation.getJury().getLastName());
+			entry.setTitle(evaluation.getContestant().getCode() + "\\" + evaluation.getJury().getLastName());
 		else
 			entry.setTitle("not assigned");
 		return entry;

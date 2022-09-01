@@ -23,10 +23,17 @@ import lombok.Setter;
 public class Topic extends AbstractEntity {
 
 
+	@Column(nullable=false, length=150)
 	@NotNull
 	@Size(min = 1, max = 150, message="Size must be between 1 an 150 characters")
 	private String name;
 
+    /**
+     * The color of this topic. Any valid css color is allowed (e.g. #f00, #ff0000, rgb(255,0,0), or red).
+     */
+	@Column(nullable=true, length=20)
+	private String color;
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 			  name = "jury_topics", 

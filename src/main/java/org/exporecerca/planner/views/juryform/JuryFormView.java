@@ -13,9 +13,12 @@ import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.splitlayout.SplitLayout;
 import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.upload.Upload;
+import com.vaadin.flow.component.upload.receivers.MemoryBuffer;
 import com.vaadin.flow.data.binder.BeanValidationBinder;
 import com.vaadin.flow.data.binder.ValidationException;
 import com.vaadin.flow.data.renderer.LitRenderer;
@@ -24,7 +27,10 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
+import com.vaadin.flow.server.auth.AnonymousAllowed;
 import com.vaadin.flow.spring.data.VaadinSpringDataHelpers;
+
+import java.io.InputStream;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,6 +40,7 @@ import org.exporecerca.planner.data.entity.Jury;
 import org.exporecerca.planner.data.entity.Topic;
 import org.exporecerca.planner.data.service.JuryService;
 import org.exporecerca.planner.data.service.TopicService;
+import org.exporecerca.planner.excel.ExcelService;
 import org.exporecerca.planner.views.MainLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -44,13 +51,14 @@ import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 @Route(value = "jury-form/:samplePersonID?/:action?(edit)", layout = MainLayout.class)
 @RouteAlias(value = "jury", layout = MainLayout.class)
 @Uses(Icon.class)
-@PermitAll
+//@PermitAll  -->users logged in
+@AnonymousAllowed
 public class JuryFormView extends Div implements BeforeEnterObserver {
 
 
  
     @Autowired
-    public JuryFormView(JuryService juryService,TopicService topicService) {
+    public JuryFormView(JuryService juryService,TopicService topicService,ExcelService excelService) {
         // crud instance
         GridCrud<Jury> crud = new GridCrud<>(Jury.class);
 
@@ -76,6 +84,24 @@ public class JuryFormView extends Div implements BeforeEnterObserver {
 		crud.setDeleteOperation(juryService::delete);	
         add(crud);
 //        crud.setFindAllOperationVisible(false);
+		MemoryBuffer memoryBuffer = new MemoryBuffer();
+		Upload singleFileUpload = new Upload(memoryBuffer);
+
+		singleFileUpload.addSucceededListener(event -> {
+			// Get information about the uploaded file
+			InputStream fileData = memoryBuffer.getInputStream();
+			String fileName = event.getFileName();
+			long contentLength = event.getContentLength();
+			String mimeType = event.getMIMEType();
+
+			String log = excelService.importJuries(fileData, juryService);
+			if (log.equals("")) {
+				Notification.show("Juries imported succesfully", 10000, Position.TOP_CENTER);
+				crud.refreshGrid();
+			} else
+				Notification.show(log, 10000, Position.TOP_CENTER);
+		});
+		add(singleFileUpload);
 
     }
 
