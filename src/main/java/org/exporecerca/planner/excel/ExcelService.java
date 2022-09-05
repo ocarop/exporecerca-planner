@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFFont;
@@ -192,17 +193,21 @@ public class ExcelService {
 			Row row = rowIterator.next();
 
 			// Till there is an element condition holds true
-			while (rowIterator.hasNext() && !row.getCell(0).getStringCellValue().equals("")) {
+			while (rowIterator.hasNext() && !row.getCell(1).getStringCellValue().equals("")) {
 
 				row = rowIterator.next();
 
-				String code = row.getCell(0).getStringCellValue();
-				String title = row.getCell(1).getStringCellValue();
-				String names = row.getCell(2).getStringCellValue();
-				String center = row.getCell(3).getStringCellValue();
-				String topic = row.getCell(4).getStringCellValue();
+				int code = (int) row.getCell(0).getNumericCellValue();
+				String title = "";
+				if (row.getCell(1)!=null && row.getCell(1).getCellType() != CellType.BLANK ) title =row.getCell(1).getStringCellValue();
+				String names = "";
+				if (row.getCell(2)!=null && row.getCell(2).getCellType() != CellType.BLANK) names=row.getCell(2).getStringCellValue();
+				String center = "";
+				if (row.getCell(3)!=null && row.getCell(3).getCellType() != CellType.BLANK) center=row.getCell(3).getStringCellValue();
+				String topic = "";
+				if (row.getCell(4)!=null && row.getCell(4).getCellType() == CellType.BLANK) topic=row.getCell(4).getStringCellValue();
 				Contestant contestant=new Contestant();
-				contestant.setCode(code);
+				contestant.setCode(Integer.toString(code));
 				contestant.setTitle(title);
 				contestant.setNames(names);
 				contestant.setCenter(center);

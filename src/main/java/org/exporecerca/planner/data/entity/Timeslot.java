@@ -7,7 +7,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.validation.constraints.NotNull;
 
+import lombok.Data;
+
 @Entity
+@Data
 public class Timeslot extends AbstractEntity {
 
 	@Column(nullable=false)
@@ -18,17 +21,6 @@ public class Timeslot extends AbstractEntity {
 	@Column(nullable=false)
 	private LocalDateTime endTime;
     
-	public LocalDateTime getStartTime() {
-		return startTime;
-	}
-	public void setStartTime(LocalDateTime startTime) {
-		this.startTime = startTime;
-	}
-	public LocalDateTime getEndTime() {
-		return endTime;
-	}
-	public void setEndTime(LocalDateTime endTime) {
-		this.endTime = endTime;
-	}
+
 
 }

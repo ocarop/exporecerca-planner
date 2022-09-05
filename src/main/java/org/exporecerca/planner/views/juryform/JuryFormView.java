@@ -51,7 +51,7 @@ import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
 @Route(value = "jury-form/:samplePersonID?/:action?(edit)", layout = MainLayout.class)
 @RouteAlias(value = "jury", layout = MainLayout.class)
 @Uses(Icon.class)
-//@PermitAll  -->users logged in
+//@PermitAll  //-->users logged in
 @AnonymousAllowed
 public class JuryFormView extends Div implements BeforeEnterObserver {
 
@@ -63,14 +63,14 @@ public class JuryFormView extends Div implements BeforeEnterObserver {
         GridCrud<Jury> crud = new GridCrud<>(Jury.class);
 
         // grid configuration
-        crud.getGrid().setColumns ("firstName", "lastName","email","topics");
+        crud.getGrid().setColumns ("firstName", "lastName","topics");
         crud.getGrid().setColumnReorderingAllowed(true);
         crud.getGrid().getColumns().forEach(c -> c.setAutoWidth(true));
         
         // form configuration
         crud.getCrudFormFactory().setUseBeanValidation(true);
         crud.getCrudFormFactory().setVisibleProperties(
-                "firstName", "lastName", "email", "phone", "topics");
+                "firstName", "lastName",  "phone","email", "topics");
         crud.getCrudFormFactory().setFieldProvider("topics",
                 new CheckBoxGroupProvider<Topic>("Topics",topicService.findAll(),Topic::getName));
  

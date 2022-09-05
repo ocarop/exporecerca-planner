@@ -58,14 +58,11 @@ public class ContestantFormView extends Div implements BeforeEnterObserver {
 
     private Grid<Jury> grid = new Grid<>(Jury.class, false);
 
-    private TextField firstName;
-    private TextField lastName;
-    private TextField email;
-    private TextField phone;
-    private DatePicker dateOfBirth;
-    private TextField occupation;
-    private Checkbox important;
-
+    private TextField code;
+    private TextField title;
+    private TextField center;
+    private TextField names;
+    
     private Button cancel = new Button("Cancel");
     private Button save = new Button("Save");
 
@@ -80,13 +77,13 @@ public class ContestantFormView extends Div implements BeforeEnterObserver {
         GridCrud<Contestant> crud = new GridCrud<>(Contestant.class);
 
         // grid configuration
-        crud.getGrid().setColumns ("firstName", "lastName","email");
+        crud.getGrid().setColumns ("code", "title","center","names","topic");
         crud.getGrid().setColumnReorderingAllowed(true);
 
         // form configuration
         crud.getCrudFormFactory().setUseBeanValidation(true);
         crud.getCrudFormFactory().setVisibleProperties(
-                "firstName", "lastName", "email", "phone", "topic");
+                "code", "title", "topic");
         crud.getCrudFormFactory().setFieldProvider("topic",
                 new ComboBoxProvider<Topic>("Topic", topicService.findAll()));
  

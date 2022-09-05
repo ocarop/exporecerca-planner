@@ -40,7 +40,7 @@ public class TopicFormView extends Div implements BeforeEnterObserver {
 
 		// form configuration
 		crud.getCrudFormFactory().setUseBeanValidation(true);
-		crud.getCrudFormFactory().setVisibleProperties("name");
+		crud.getCrudFormFactory().setVisibleProperties("name","color");
 
 		crud.getCrudFormFactory().setUseBeanValidation(true);
 		crud.setFindAllOperation(() -> topicService.findAll());

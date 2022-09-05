@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Getter @Setter
+@Data
 public class Topic extends AbstractEntity {
 
 
@@ -48,5 +48,11 @@ public class Topic extends AbstractEntity {
 	public Topic() {
 		super();
 	}
+
+	@Override
+	public String toString() {
+		return name ;
+	}
+	
 	
 }

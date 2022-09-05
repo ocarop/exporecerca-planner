@@ -27,7 +27,12 @@ import org.optaplanner.core.api.score.buildin.hardmediumsoft.HardMediumSoftScore
 import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScore;
 import org.optaplanner.core.api.solver.SolverStatus;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @PlanningSolution
+@Getter
+@Setter
 public class TimeTable {
 
     @ValueRangeProvider(id = "timeslotRange")
@@ -56,50 +61,6 @@ public class TimeTable {
     public TimeTable() {
     }
 
-
-    // ************************************************************************
-    // Getters and setters
-    // ************************************************************************
-
-
-    
-    public List<Timeslot> getTimeslotList() {
-        return timeslotList;
-    }
-
-    public List<Jury> getJuryList() {
-		return juryList;
-	}
-
-
-	public void setJuryList(List<Jury> juryList) {
-		this.juryList = juryList;
-	}
-
-
-	public List<Contestant> getContestantList() {
-		return contestantList;
-	}
-
-
-	public void setContestantList(List<Contestant> list) {
-		this.contestantList = list;
-	}
-
-
-	public List<Evaluation> getEvaluationList() {
-		return evaluationList;
-	}
-
-
-	public void setEvaluationList(List<Evaluation> evaluationList) {
-		this.evaluationList = evaluationList;
-	}
-
-
-	public void setTimeslotList(List<Timeslot> timeslotList) {
-		this.timeslotList = timeslotList;
-	}
 
 
 	public HardMediumSoftScore getScore() {

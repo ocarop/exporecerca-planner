@@ -23,18 +23,16 @@ public class Contestant extends AbstractEntity {
 	@NotNull
     private String code;
 
-	@Column(nullable=false, length=250)
+	@Column(nullable=false, length=1000)
 	@NotNull
-	@Size(min=2,max=250,message="Size must be between 2 an 250 characters")
+	@Size(min=2,max=1000,message="Size must be between 2 an 1000 characters")
     private String title;
 	
 	
-	@Column(nullable=false, length=50)
-	@Size(min=2,max=500,message="Size must be between 2 an 500 characters")
+	@Column(nullable=true, length=500)
     private String names;
 
-	@Column(nullable=true, length=100)
-	@Size(min=2,max=50,message="Size must be between 2 an 100 characters")
+	@Column(nullable=true, length=500)
 	private String center;
 	
 	@ManyToOne
