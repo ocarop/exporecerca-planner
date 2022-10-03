@@ -1,5 +1,6 @@
 package org.exporecerca.planner.data.service;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import com.vaadin.flow.data.provider.DataProvider;
 
 @Service
 public class TimeslotService {
@@ -47,6 +50,11 @@ public class TimeslotService {
 	public  List<Timeslot> findAll() {
 		// TODO Auto-generated method stub
 		return repository.findAll();
+	}
+
+	public Collection<Timeslot> findAllByOrderByStartTime() {
+
+		return repository.findAllByOrderByStartTime();
 	}
 
 }

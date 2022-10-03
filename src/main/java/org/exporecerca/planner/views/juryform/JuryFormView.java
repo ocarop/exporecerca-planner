@@ -12,6 +12,7 @@ import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.Notification.Position;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -37,8 +38,10 @@ import java.util.UUID;
 import javax.annotation.security.PermitAll;
 
 import org.exporecerca.planner.data.entity.Jury;
+import org.exporecerca.planner.data.entity.Timeslot;
 import org.exporecerca.planner.data.entity.Topic;
 import org.exporecerca.planner.data.service.JuryService;
+import org.exporecerca.planner.data.service.TimeslotService;
 import org.exporecerca.planner.data.service.TopicService;
 import org.exporecerca.planner.excel.ExcelService;
 import org.exporecerca.planner.views.MainLayout;
@@ -46,6 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.vaadin.crudui.crud.impl.GridCrud;
 import org.vaadin.crudui.form.impl.field.provider.CheckBoxGroupProvider;
+
 
 @PageTitle("Jury Form")
 @Route(value = "jury-form/:samplePersonID?/:action?(edit)", layout = MainLayout.class)
@@ -58,7 +62,7 @@ public class JuryFormView extends Div implements BeforeEnterObserver {
 
  
     @Autowired
-    public JuryFormView(JuryService juryService,TopicService topicService,ExcelService excelService) {
+    public JuryFormView(JuryService juryService,TopicService topicService,TimeslotService timeslotService, ExcelService excelService) {
         // crud instance
         GridCrud<Jury> crud = new GridCrud<>(Jury.class);
 
@@ -70,10 +74,17 @@ public class JuryFormView extends Div implements BeforeEnterObserver {
         // form configuration
         crud.getCrudFormFactory().setUseBeanValidation(true);
         crud.getCrudFormFactory().setVisibleProperties(
-                "firstName", "lastName",  "phone","email", "topics");
+                "firstName", "lastName",  "phone","email", "topics", "timeslots");
         crud.getCrudFormFactory().setFieldProvider("topics",
                 new CheckBoxGroupProvider<Topic>("Topics",topicService.findAll(),Topic::getName));
- 
+        
+        crud.getCrudFormFactory().setFieldProvider("timeslots", jury -> {
+        	MultiSelectListBox<Timeslot> timeslotList = new MultiSelectListBox<Timeslot>();
+        	timeslotList.setItems(timeslotService.findAllByOrderByStartTime());
+        	timeslotList.setItemLabelGenerator(Timeslot::toString);
+            return timeslotList;
+        });
+        
         // layout configuration
         setSizeFull();
         

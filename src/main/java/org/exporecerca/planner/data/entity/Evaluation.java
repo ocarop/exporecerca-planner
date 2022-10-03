@@ -51,6 +51,9 @@ public class Evaluation extends AbstractEntity {
 	
     @ValueRangeProvider(id = "juryRange")
     public List<Jury> getPossibleJuryList() {
-        return getContestant().getTopic().getPossibleJuryList();
+    	//Filter juries for topic
+        List<Jury> juryListTopic = getContestant().getTopic().getPossibleJuryList();
+        //Second filter: juries available in the timeslot
+        return juryListTopic.stream().filter(jury->jury.getTimeslots().contains(timeslot)).toList();
     }
 }

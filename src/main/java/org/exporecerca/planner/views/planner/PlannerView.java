@@ -180,8 +180,7 @@ public class PlannerView extends VerticalLayout {
 				evaluation = evaluationService.save(evaluation);
 				evaluationList.add(evaluation);
 			}
-		}
-		;
+		};
 
 		timeTable.setJuryList(juryService.findAll());
 		timeTable.setContestantList(contestantService.findAll());

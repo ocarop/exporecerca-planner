@@ -43,11 +43,17 @@ public class Jury extends AbstractEntity {
     
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-			  name = "jury_topics", 
+			  name = "jury_topic", 
 			  joinColumns = @JoinColumn(name = "jury_id"), 
 			  inverseJoinColumns = @JoinColumn(name = "topic_id"))
 	private Set<Topic> topics;
     
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(
+			  name = "jury_timeslot", 
+			  joinColumns = @JoinColumn(name = "jury_id"), 
+			  inverseJoinColumns = @JoinColumn(name = "timeslot_id"))
+	private Set<Timeslot> timeslots;
  
 
 }
