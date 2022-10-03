@@ -2,6 +2,7 @@ package org.exporecerca.planner.data.entity;
 
 import java.time.LocalDate;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,9 +19,12 @@ import javax.validation.constraints.Size;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Jury extends AbstractEntity {
 
 	@Column(nullable=false, length=50)

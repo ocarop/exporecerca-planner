@@ -183,7 +183,7 @@ public class PlannerView extends VerticalLayout {
 		};
 
 		timeTable.setJuryList(juryService.findAll());
-		timeTable.setContestantList(contestantService.findAll());
+		timeTable.setContestantList(contestantList);
 		timeTable.setTimeslotList(timeslotList);
 		timeTable.setEvaluationList(evaluationList);
 

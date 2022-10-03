@@ -19,7 +19,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
 public class Topic extends AbstractEntity {
 
 
