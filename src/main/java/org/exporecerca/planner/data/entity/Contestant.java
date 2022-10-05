@@ -14,9 +14,12 @@ import javax.validation.constraints.Size;
 import org.optaplanner.core.api.domain.lookup.PlanningId;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
+@Setter
+@Getter
 public class Contestant extends AbstractEntity {
 
 	@Column(nullable=false, length=3)
@@ -37,6 +40,11 @@ public class Contestant extends AbstractEntity {
 	
 	@ManyToOne
 	private Topic topic;
+
+	@Override
+	public String toString() {
+		return  code ;
+	}
 
 
 }

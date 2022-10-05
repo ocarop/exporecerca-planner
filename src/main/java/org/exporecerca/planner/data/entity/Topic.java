@@ -37,7 +37,7 @@ public class Topic extends AbstractEntity {
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
-			  name = "jury_topics", 
+			  name = "jury_topic", 
 			  joinColumns = @JoinColumn(name = "topic_id"), 
 			  inverseJoinColumns = @JoinColumn(name = "jury_id"))
 	List<Jury> possibleJuryList;

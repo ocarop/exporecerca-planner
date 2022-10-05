@@ -50,6 +50,7 @@ public class Evaluation extends AbstractEntity {
     public List<Jury> getPossibleJuryList() {
     	//Filter juries for topic
         List<Jury> juryListTopic = getContestant().getTopic().getPossibleJuryList();
+        //return juryListTopic;
         //Second filter: juries available in the timeslot
         return juryListTopic.stream().filter(jury->jury.getTimeslots().contains(timeslot)).toList();
     }
