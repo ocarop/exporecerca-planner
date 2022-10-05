@@ -21,8 +21,8 @@ import org.exporecerca.planner.data.entity.User;
 import org.exporecerca.planner.security.AuthenticatedUser;
 import org.exporecerca.planner.views.contestantform.ContestantFormView;
 import org.exporecerca.planner.views.juryform.JuryFormView;
-import org.exporecerca.planner.views.masterdetail.TimeSlotFormView;
 import org.exporecerca.planner.views.planner.PlannerView;
+import org.exporecerca.planner.views.timeslot.TimeSlotFormView;
 import org.exporecerca.planner.views.topic.TopicFormView;
 
 /**

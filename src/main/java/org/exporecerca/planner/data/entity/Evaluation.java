@@ -42,9 +42,6 @@ public class Evaluation extends AbstractEntity {
 		return super.getId();
 	}
 
-    
-
-
 	public  boolean isUnassigned(){
 		return jury==null;
 	}

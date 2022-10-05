@@ -16,6 +16,7 @@
 
 package org.exporecerca.planner.data.entity;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
@@ -35,16 +36,12 @@ import lombok.Setter;
 @Setter
 public class TimeTable {
 
-    @ValueRangeProvider(id = "timeslotRange")
     @ProblemFactCollectionProperty
     private List<Timeslot> timeslotList;
 
-    /*
-    @ValueRangeProvider(id = "juryRange")*/
     @ProblemFactCollectionProperty
     private List<Jury> juryList;
 
-    @ValueRangeProvider(id = "contestantRange")
     @ProblemFactCollectionProperty
     private List<Contestant> contestantList;
     

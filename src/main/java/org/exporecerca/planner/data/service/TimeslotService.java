@@ -52,7 +52,7 @@ public class TimeslotService {
 		return repository.findAll();
 	}
 
-	public Collection<Timeslot> findAllByOrderByStartTime() {
+	public List<Timeslot> findAllByOrderByStartTime() {
 
 		return repository.findAllByOrderByStartTime();
 	}

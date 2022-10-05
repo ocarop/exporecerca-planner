@@ -139,8 +139,8 @@ public class PlannerView extends VerticalLayout {
 		FullCalendar calendar = FullCalendarBuilder.create().withScheduler().build();
 		((Scheduler) calendar).setSchedulerLicenseKey("CC-Attribution-NonCommercial-NoDerivatives");
 		calendar.changeView(CalendarViewImpl.DAY_GRID_WEEK);
-		Timezone timezoneMadrid=new Timezone(ZoneId.of("Europe/Madrid"));
-		calendar.setTimezone(timezoneMadrid);
+		//Timezone timezoneMadrid=new Timezone(ZoneId.of("Europe/Madrid"));
+		//calendar.setTimezone(timezoneMadrid);
 		calendar.setLocale(CalendarLocale.SPANISH);
 
 		CallbackEntryProvider<Entry> entryProvider = createEntryProvider();
@@ -167,7 +167,7 @@ public class PlannerView extends VerticalLayout {
 		evaluationService.deleteAll();
 		TimeTable timeTable = new TimeTable();
 
-		List<Timeslot> timeslotList = timeslotService.findAll();
+		List<Timeslot> timeslotList = timeslotService.findAllByOrderByStartTime();
 
 		List<org.exporecerca.planner.data.entity.Contestant> contestantList = contestantService.findAll();
 
@@ -217,7 +217,7 @@ public class PlannerView extends VerticalLayout {
 		}
 		// init lazy loading provider based on given collection - does NOT use the
 		// collection as backend as ListDataProvider does
-//test entry
+/*test entry
         Entry entry = new Entry();
         LocalDate now = LocalDate.now();
         entry.setTitle("Meeting 12");
@@ -228,6 +228,7 @@ public class PlannerView extends VerticalLayout {
         entry.setCustomProperty("description", "Description of meeting 12" );
         entry.setEditable(true);
         entryList.add(entry);
+        */
         LazyInMemoryEntryProvider<Entry> entryProvider = EntryProvider.lazyInMemoryFromItems(entryList);
 		calendar.gotoDate(minTime.toLocalDate());
 		// set entry provider

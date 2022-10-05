@@ -1,4 +1,4 @@
-package org.exporecerca.planner.views.masterdetail;
+package org.exporecerca.planner.views.timeslot;
 
 import java.time.Duration;
 
@@ -45,7 +45,7 @@ public class TimeSlotFormView extends Div implements BeforeEnterObserver{
         crud.getCrudFormFactory().setFieldCreationListener("endTime", field -> ((DateTimePicker) field).setStep(Duration.ofMinutes(30)));
         
 		crud.getCrudFormFactory().setUseBeanValidation(true);
-		crud.setFindAllOperation(() -> timeSlotService.findAll());
+		crud.setFindAllOperation(() -> timeSlotService.findAllByOrderByStartTime());
 		crud.setAddOperation(timeSlotService::update);
 		crud.setUpdateOperation(timeSlotService::update);
 		crud.setDeleteOperation(timeSlotService::delete);		

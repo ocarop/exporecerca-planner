@@ -27,8 +27,11 @@ public class Timeslot extends AbstractEntity {
 
 	@Override
 	public String toString() {
-		
-		return "From " + startTime.format(DateTimeFormatter.ofPattern("dd-MM hh:mm")) + " to " + endTime.format(DateTimeFormatter.ofPattern("dd-MM hh:mm"));
+		if (startTime.getDayOfMonth()==endTime.getDayOfMonth() && startTime.getMonth()==endTime.getMonth())
+			//same day
+			return startTime.format(DateTimeFormatter.ofPattern("dd-MM")) + " from " + startTime.format(DateTimeFormatter.ofPattern("hh:mm")) + " to " + endTime.format(DateTimeFormatter.ofPattern("hh:mm"));
+		else	
+			return "From " + startTime.format(DateTimeFormatter.ofPattern("dd-MM hh:mm")) + " to " + endTime.format(DateTimeFormatter.ofPattern("dd-MM hh:mm"));
 	}
     
 

@@ -58,6 +58,11 @@ public class Jury extends AbstractEntity {
 			  joinColumns = @JoinColumn(name = "jury_id"), 
 			  inverseJoinColumns = @JoinColumn(name = "timeslot_id"))
 	private Set<Timeslot> timeslots;
+
+	@Override
+	public String toString() {
+		return firstName + " " + lastName ;
+	}
  
 
 }
