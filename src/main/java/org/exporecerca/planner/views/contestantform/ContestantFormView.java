@@ -106,9 +106,9 @@ public class ContestantFormView extends Div implements BeforeEnterObserver {
 			long contentLength = event.getContentLength();
 			String mimeType = event.getMIMEType();
 
-			String log = excelService.importContestants(fileData, contestantService,topicService);
+			String log = excelService.importContestants(fileData, contestantService, topicService);
 			if (log.equals("")) {
-				Notification.show("Juries imported succesfully", 10000, Position.TOP_CENTER);
+				Notification.show("Contestants imported succesfully", 10000, Position.TOP_CENTER);
 				crud.refreshGrid();
 			} else
 				Notification.show(log, 10000, Position.TOP_CENTER);

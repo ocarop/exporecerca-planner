@@ -4,8 +4,8 @@ ID per jurat,Títol,Centre,Modalitat
 3,Contaminació diària,Institut Vilanova del Vallès,Naturals | Medi ambient
 4,'L''autoestima en l''adolescència',Institut de Vilanova del Vallès,Socials | Comunicació | Llengua | Economia | Història
 5,Estudio sobre la ventilación en el entorno escolar,IES Padre Luis Coloma,Naturals | Medi ambient
-6,'"Radiació ultraviolada: Anàlisi de l''exposició directa  reflectida i protecció ocular"',,Ciències pures
-7,EL ORIGEN DE LA ARENA DE NUESTRAS PLAYAS,COL·LEGI SANTA MARIA,Naturals | Medi ambient
+6,"'""Radiació ultraviolada: Anàlisi de l''exposició directa  reflectida i protecció ocular""'",sin nombre1,Ciències pures
+7,sin nombre1,COL·LEGI SANTA MARIA,Naturals | Medi ambient
 8,'Disseny i construcció d''un sistema d''autoregulació d''una casa domòtica mitjançant el registre d''empremtes dactilars amb Arduino',Escola Mare de Déu de la Salut,Tecnologia
 9,La presència de la música clàssica en la música actual,Institut Vilanova del Vallès,Art | Música | Pensament
 10,Prevent fresh food spoilage by use of phytochemical plant extracts,Volksrust High School,Ciències pures
@@ -22,11 +22,11 @@ ID per jurat,Títol,Centre,Modalitat
 21,Estudio de la influencia del ADP cristalizado en la elaboración del vinagre de Jerez,IES San Telmo,Ciències pures
 22,'DONES EN PEU DE GUERRA. ESTUDI DE LA GUERRA CIVIL ESPANYOLA DES D''UNA PERSPECTIVA DE GÈNERE',IES Montserrat Miró i Vilà,Socials | Comunicació | Llengua | Economia | Història
 23,CREACIÓN DE PERFUMES CON ACEITES ESENCIALES E INVESTIGACIÓN DE LA HISTORIA Y USO DE ESTOS,Aulas Tecnópole - Parque Tecnológico de Galicia,Naturals | Medi ambient
-24,"STEM & Sphero: la robòtica a biologia propostes innovadores",,Naturals | Medi ambient
+24,STEM & Sphero: la robòtica a biologia propostes innovadores,sin nombre2,Naturals | Medi ambient
 25,Positiu o negatiu? La pandèmia i els infants,Institut Vilatzara,Socials | Comunicació | Llengua | Economia | Història
 26,Estudio de la población de mamíferos en 3 localizaciones navarras mediante técnicas de fototrampeo y la plataforma de ciencia ciudadana MammalWeb,IES Barañáin,Naturals | Medi ambient
 27,APPtitripsina: visualització d’una malaltia minoritària,Institut Carles Vallbona,Salut
-28,"La nanomedicina contra el càncer no és el futur  és “avui”",,Salut
+28,La nanomedicina contra el càncer no és el futur  és “avui”,sin nombre3,Salut
 29,Ciència té nom de dona: estudi del reconeixement del paper de les dones a la ciència,Escola Mare de Déu de la Salut,Socials | Comunicació | Llengua | Economia | Història
 30,Expedicions pirinenques durant la Guerra Civil. Vivències del meu besavi,IES Damià Campeny,Socials | Comunicació | Llengua | Economia | Història
 31,'Disseny i construcció d''una dessaladora solar',Escola Mare de Déu de la Salut,Tecnologia
@@ -38,12 +38,12 @@ ID per jurat,Títol,Centre,Modalitat
 37,ESTUDI DELS PRODUCTES DE NETEJA PERILLOSOS A LES NOSTRES LLARS I POSSIBLES ALTERNATIVES,Institut El Cairat,Salut
 38,IMPORTANCIA DE LA HUELLA ECOLOGICA SOBRE EL MEDIOAMBIENTE Y SU AYUDA A LA VIDA SOSTENIBLE,CPR SANTIAGO APÓSTOL,Naturals | Medi ambient
 39,LEISHMANIOSIS,COL·LEGI SANTA MARIA,Salut
-40,A la caza de exoplanetas. Análisis de los tránsitos de WASP-12b,"IES Margarita Salas,Ciències pures
+40,A la caza de exoplanetas. Análisis de los tránsitos de WASP-12b,IES Margarita Salas,Ciències pures
 41,Leonardo da Vinci i alguns dels seus invents,Escola Mare de Déu de la Salut,Tecnologia
 42,Què amaguen els somnis?,Institut Carles Vallbona,Salut
 43,Desenvolupament de videojocs en 16-bits,Institut Joan Brudieu,Tecnologia
-44,'"ESTUDIO COMPARATIVO DE LA RESISTENCIA DE CINCO ACEITES (ACEITE DE OLIVA VIRGEN EXTRA,  ACEITE DE OLIVA VIRGEN, ACEITE DE GIRASOL VIRGEN, ACEITE DE GIRASOL ALTO OLEICO SIN REFINAR, ACEITE DE SÉSAMO) A SU REUTILIZACIÓN"',,Ciències pures
-45,"Un recorregut virtual per La Tèrmica (Roca Umbert Granollers): gaudeix-la!", ,Socials | Comunicació | Llengua | Economia | Història
+44,"'""ESTUDIO COMPARATIVO DE LA RESISTENCIA DE CINCO ACEITES (ACEITE DE OLIVA VIRGEN EXTRA ACEITE DE OLIVA VIRGEN ACEITE DE GIRASOL VIRGEN ACEITE DE GIRASOL ALTO OLEICO SIN REFINAR ACEITE DE SÉSAMO) A SU REUTILIZACIÓN""'",ins.sin nombre1,Ciències pures
+45,Un recorregut virtual per La Tèrmica (Roca Umbert Granollers): gaudeix-la!,ins.sin nombre2,Socials | Comunicació | Llengua | Economia | Història
 46,Cámara de Niebla Low Cost,Aulas Tecnópole,Tecnologia
 47,Local Geographical Signs of Buca Kırıklar Melon and Kaynaklar Razakı Grape,Buca Municipality Kızılcullu Science and Art Center,Naturals | Medi ambient
 48,Contaminació Atmosfèrica a Vilanova del Vallès,Institut Vilanova del Vallès,Naturals | Medi ambient
@@ -63,14 +63,14 @@ ID per jurat,Títol,Centre,Modalitat
 62,Influencia del nivel cultural en la extinción del Homo neanderthalensis en su competición con el Homo sapiens: análisis mediante el juego de contiendas.,IES Gerardo Diego,Ciències pures
 63,'La Figura de la Dona al Món de l''Advocacia',Escola Mare de Déu de la Salut,Socials | Comunicació | Llengua | Economia | Història
 64,'Les causes i conseqüències de l''hospitalització infantil',Institut El Til·ler,Salut
-65,La cara oculta de la indústria de la moda: fast fashion i slow fashion,"EASD Llotja,Art | Música | Pensament
+65,La cara oculta de la indústria de la moda: fast fashion i slow fashion,EASD Llotja,Art | Música | Pensament
 66,La física de l’espagueti: estudi del seu trencament aplicant peses,Institut Carles Vallbona,Ciències pures
 67,Bacteris superresistents. És la llum ultraviolada realment una aliada?,Institut Vilanova del Vallès,Naturals | Medi ambient
-68,'"AVALUACIÓ I COMPARACIÓ DE L''EFECTIVITAT I SEGURETAT DEL TRASPLANTAMENT DE MICROBIOTA FECAL: ANTIINFLAMATORIS I BIOLÒGICS PER AL TRACTAMENT DE LA MALALTIA INFLAMATÒRIA INTESTINAL"',,Salut
-69,"WScientifics. Rompiendo con el efecto Matilda. Una propuesta de ciencia igualdad e inclusión.", ,Socials | Comunicació | Llengua | Economia | Història
-70,"ATTIC: CREACIÓ I PRODUCCIÓ D’UN EP MUSICAL", ,Art | Música | Pensament
+68,"'""AVALUACIÓ I COMPARACIÓ DE L''EFECTIVITAT I SEGURETAT DEL TRASPLANTAMENT DE MICROBIOTA FECAL: ANTIINFLAMATORIS I BIOLÒGICS PER AL TRACTAMENT DE LA MALALTIA INFLAMATÒRIA INTESTINAL""'",sin nombre4,Salut
+69,WScientifics. Rompiendo con el efecto Matilda. Una propuesta de ciencia igualdad e inclusión.,ins.sin nombre3 ,Socials | Comunicació | Llengua | Economia | Història
+70,ATTIC: CREACIÓ I PRODUCCIÓ D’UN EP MUSICAL, ins.sin nombre4,Art | Música | Pensament
 71,'Rehabilitació del Vapor Casanovas per a la instauració d''un coworking',Escola Mare de Déu de la Salut,Tecnologia
-72,'"""Cada cop que respiris t''estaré mirant""', Apol·lo dixit",Art | Música | Pensament
+72,"'""""""Cada cop que respiris t''estaré mirant""""'"," Apol·lo dixit""",Art | Música | Pensament
 73,Moviments planetaris: ús dels robots Sphero en el marc del projecte Posa’t en òrbita,Institut Carles Vallbona,Naturals | Medi ambient
 74,De nada. Un film de Mariona de las Heras.,Institut de Vilanova del Vallès,Art | Música | Pensament
 75,The New Indigo Production,"Istituto Superiore ""E. Fermi""",Naturals | Medi ambient

@@ -1,5 +1,7 @@
 package org.exporecerca.planner.excel;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -19,6 +21,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.exporecerca.planner.data.entity.Contestant;
 import org.exporecerca.planner.data.entity.Jury;
+import org.exporecerca.planner.data.entity.TimeTable;
 import org.exporecerca.planner.data.entity.Topic;
 import org.exporecerca.planner.data.service.ContestantService;
 import org.exporecerca.planner.data.service.JuryService;
@@ -128,7 +131,7 @@ public class ExcelService {
 
 				String name = row.getCell(0).getStringCellValue();
 				String color = row.getCell(1).getStringCellValue();
-				Topic topic=new Topic();
+				Topic topic = new Topic();
 				topic.setName(name);
 				topic.setColor(color);
 				topicService.save(topic);
@@ -164,10 +167,13 @@ public class ExcelService {
 				String firstName = row.getCell(0).getStringCellValue();
 				String lastName = row.getCell(1).getStringCellValue();
 				String email = row.getCell(2).getStringCellValue();
-				Jury jury=new Jury();
+				Jury jury = new Jury();
 				jury.setFirstName(firstName);
 				jury.setLastName(lastName);
-				if (email.equals("")) jury.setEmail(null);else jury.setEmail(email);
+				if (email.equals(""))
+					jury.setEmail(null);
+				else
+					jury.setEmail(email);
 				juryService.save(jury);
 			}
 		} catch (Exception e) {
@@ -179,7 +185,8 @@ public class ExcelService {
 		return log;
 	}
 
-	public String importContestants(InputStream fileData, ContestantService contestantService, TopicService topicService) {
+	public String importContestants(InputStream fileData, ContestantService contestantService,
+			TopicService topicService) {
 		String log = "";
 		XSSFWorkbook workbook;
 		try {
@@ -199,19 +206,28 @@ public class ExcelService {
 
 				int code = (int) row.getCell(0).getNumericCellValue();
 				String title = "";
-				if (row.getCell(1)!=null && row.getCell(1).getCellType() != CellType.BLANK ) title =row.getCell(1).getStringCellValue();
-				String names = "";
-				if (row.getCell(2)!=null && row.getCell(2).getCellType() != CellType.BLANK) names=row.getCell(2).getStringCellValue();
+				if (row.getCell(1) != null && row.getCell(1).getCellType() != CellType.BLANK)
+					title = row.getCell(1).getStringCellValue();
+				/*String names = "";
+				if (row.getCell(2) != null && row.getCell(2).getCellType() != CellType.BLANK)
+					names = row.getCell(2).getStringCellValue();*/
 				String center = "";
-				if (row.getCell(3)!=null && row.getCell(3).getCellType() != CellType.BLANK) center=row.getCell(3).getStringCellValue();
+				if (row.getCell(2) != null && row.getCell(2).getCellType() != CellType.BLANK)
+					center = row.getCell(2).getStringCellValue();
 				String topic = "";
-				if (row.getCell(4)!=null && row.getCell(4).getCellType() == CellType.BLANK) topic=row.getCell(4).getStringCellValue();
-				Contestant contestant=new Contestant();
+				if (row.getCell(3) != null && row.getCell(3).getCellType() != CellType.BLANK)
+					topic = row.getCell(3).getStringCellValue();
+				Contestant contestant = new Contestant();
 				contestant.setCode(Integer.toString(code));
 				contestant.setTitle(title);
-				contestant.setNames(names);
+				//contestant.setNames(names);
 				contestant.setCenter(center);
-				Topic topicEntity=topicService.findByName(topic);
+				Topic topicEntity = topicService.findByName(topic);
+				if (topicEntity == null) {
+					topicEntity = new Topic();
+					topicEntity.setName(topic);
+					topicEntity = topicService.update(topicEntity);
+				}
 				contestant.setTopic(topicEntity);
 
 				contestantService.save(contestant);
@@ -224,5 +240,103 @@ public class ExcelService {
 
 		return log;
 	}
+
+	public void exportContestantsCalendar(TimeTable solution) throws IOException {
+		FileOutputStream  fout = new FileOutputStream("D:/Projects/workspace/exporecerca-planner/src/main/resources/contestantscalendaroutput.xlsx");
+		XSSFWorkbook workbook;
+		workbook = new XSSFWorkbook();
+		
+		List<Contestant> contestantList = solution.getContestantList();
+		contestantList.forEach(contestant->{
+			XSSFSheet sheet = workbook.createSheet(contestant.shortName());
+			Row row = sheet.createRow(0);
+
+			XSSFCellStyle style = workbook.createCellStyle();
+			XSSFFont font = workbook.createFont();
+			font.setBold(true);
+			font.setFontHeight(12);
+			style.setFont(font);
+
+			createCell(sheet, row, 0, "Jury", style);
+			createCell(sheet, row, 1, "Timeslot", style);
+		});
+		solution.getEvaluationList().forEach(eval->{
+			XSSFCellStyle style = workbook.createCellStyle();
+			XSSFFont font = workbook.createFont();
+			font.setBold(false);
+			font.setFontHeight(12);
+			style.setFont(font);
+			if (eval.getJury()!=null) {
+				XSSFSheet sheet = workbook.getSheet(eval.getContestant().shortName());
+				if (sheet==null)
+					sheet=null;
+				int nextRow=findNextRow(sheet);
+				Row row = sheet.createRow(nextRow);
+				createCell(sheet, row, 0, eval.getJury().toString(), style);
+				createCell(sheet, row, 1, eval.getTimeslot().toString(), style);
+			}
+		});
+		workbook.write(fout);
+		workbook.close();
+
+		fout.close();
+		
+	}
 	
+	public void exportJuriesCalendar(TimeTable solution) throws IOException {
+		FileOutputStream  fout = new FileOutputStream("D:/Projects/workspace/exporecerca-planner/src/main/resources/juriescalendaroutput.xlsx");
+		XSSFWorkbook workbook;
+		workbook = new XSSFWorkbook();
+		
+		List<Jury> juryList = solution.getJuryList();
+		juryList.forEach(jury->{
+			XSSFSheet sheet = workbook.createSheet(jury.shortName());
+			Row row = sheet.createRow(0);
+
+			XSSFCellStyle style = workbook.createCellStyle();
+			XSSFFont font = workbook.createFont();
+			font.setBold(true);
+			font.setFontHeight(12);
+			style.setFont(font);
+
+			createCell(sheet, row, 0, "Contestant", style);
+			createCell(sheet, row, 1, "Timeslot", style);
+		});
+		solution.getEvaluationList().forEach(eval->{
+			XSSFCellStyle style = workbook.createCellStyle();
+			XSSFFont font = workbook.createFont();
+			font.setBold(false);
+			font.setFontHeight(12);
+			style.setFont(font);
+			if (eval.getJury()!=null) {
+				XSSFSheet sheet = workbook.getSheet(eval.getJury().shortName());
+				int nextRow=findNextRow(sheet);
+				Row row = sheet.createRow(nextRow);
+				createCell(sheet, row, 0, eval.getContestant().toString(), style);
+				createCell(sheet, row, 1, eval.getTimeslot().toString(), style);
+			}
+		});
+		workbook.write(fout);
+		workbook.close();
+
+		fout.close();
+		
+	}
+
+	private int findNextRow(XSSFSheet sheet) {
+		// Iterate through each rows one by one
+		Iterator<Row> rowIterator = sheet.iterator();
+		// skip first row
+		Row row = rowIterator.next();
+
+		// Till there is an element condition holds true
+		int rownum=1;
+		while (rowIterator.hasNext() &&row.getCell(1)!=null && !row.getCell(1).getStringCellValue().equals("")) {
+
+			row = rowIterator.next();
+			rownum= rownum+1;
+		}
+		return rownum;
+	}
+
 }

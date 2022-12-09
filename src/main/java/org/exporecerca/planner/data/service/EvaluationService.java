@@ -57,12 +57,21 @@ public class EvaluationService {
         return repository.findAll();
     }
 
-	public Stream<Entry> streamEntries(EntryQuery query) {
+    public  List<Evaluation> findAllAssignedEvaluations() {
+        return repository.findAllAssignedEvaluations();
+    }
+
+    public Stream<Entry> streamEntries(EntryQuery query) {
 		// TODO apply query filter
 		return findAll().stream().map(e->toEntry(e));
 	}
 
-	private Entry toEntry(Evaluation evaluation) {
+    public Stream<Entry> streamAssignedEntries(EntryQuery query) {
+		// TODO apply query filter
+		return findAllAssignedEvaluations().stream().map(e->toEntry(e));
+	}
+    
+    private Entry toEntry(Evaluation evaluation) {
 		Entry entry = new Entry();
 		entry.setStart(evaluation.getTimeslot().getStartTime());
 		entry.setEnd(evaluation.getTimeslot().getEndTime());

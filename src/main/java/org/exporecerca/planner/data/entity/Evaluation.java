@@ -45,7 +45,10 @@ public class Evaluation extends AbstractEntity {
 	public  boolean isUnassigned(){
 		return jury==null;
 	}
-	
+
+	public  boolean isAssigned(){
+		return jury!=null;
+	}
     @ValueRangeProvider(id = "juryRange")
     public List<Jury> getPossibleJuryList() {
     	//Filter juries for topic

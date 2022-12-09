@@ -46,5 +46,12 @@ public class Contestant extends AbstractEntity {
 		return  code ;
 	}
 
+	public String shortName() {
+		String shortName=code+".";
+		title=title.replaceAll("''", "").replaceAll(" ", "").replaceAll("'", "").replaceAll(":", "").replaceAll(",", "").replaceAll("\"", "").replaceAll("\"", "");
+		if (title.length()>12)shortName=shortName.concat(title.substring(0,11)); else shortName=shortName.concat(title);
+		return shortName;
+	}
+
 
 }

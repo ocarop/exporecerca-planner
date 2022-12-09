@@ -63,6 +63,15 @@ public class Jury extends AbstractEntity {
 	public String toString() {
 		return firstName + " " + lastName ;
 	}
+
+	public String shortName() {
+		String shortenedFirstName=firstName;
+		if (firstName.length()>6)shortenedFirstName=firstName.substring(0,5);
+		
+		String shortenedLastName=lastName;
+		if (shortenedLastName!=null&&lastName.length()>6) shortenedLastName.substring(0,5);
+		return shortenedFirstName.concat(".").concat(shortenedLastName);
+	}
  
 
 }

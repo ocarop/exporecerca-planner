@@ -13,6 +13,7 @@ import com.vaadin.flow.router.Route;
 import com.vaadin.flow.router.RouteAlias;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 
+import java.io.IOException;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -23,20 +24,24 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
 import org.exporecerca.planner.data.entity.Contestant;
 import org.exporecerca.planner.data.entity.Evaluation;
+import org.exporecerca.planner.data.entity.Jury;
 import org.exporecerca.planner.data.entity.TimeTable;
 import org.exporecerca.planner.data.entity.Timeslot;
 import org.exporecerca.planner.data.service.ContestantService;
 import org.exporecerca.planner.data.service.EvaluationService;
 import org.exporecerca.planner.data.service.JuryService;
 import org.exporecerca.planner.data.service.TimeslotService;
+import org.exporecerca.planner.excel.ExcelService;
 import org.exporecerca.planner.solver.TimeTableConstraintProvider;
 import org.exporecerca.planner.views.MainLayout;
 import org.optaplanner.core.api.solver.Solver;
@@ -66,31 +71,62 @@ public class PlannerView extends VerticalLayout {
 	private PlannerViewToolbar toolbar;
     private EvaluationService evaluationService;
     private EntryProvider<Entry> entryProvider;
-	
+    private TimeTable solution;	
 
-	public PlannerView(TimeslotService timeslotService, ContestantService contestantService, JuryService juryService, EvaluationService evaluationService) {
+	public PlannerView(TimeslotService timeslotService, ContestantService contestantService, JuryService juryService, EvaluationService evaluationService, ExcelService excelService) {
 		this.timeslotService = timeslotService;
 		this.contestantService = contestantService;
 		this.juryService = juryService;
 		this.evaluationService=evaluationService;
 
 		setSpacing(false);
+		Button cmdAsignarTimslots = new Button("Asignar Timeslots");
+		cmdAsignarTimslots.addClickListener(clickEvent -> {
+			List<Jury> juryList = juryService.findAll();
+			List<Timeslot> allTimeSlots = timeslotService.findAll();
+			juryList.forEach(jury->{
+				Set<Timeslot> timeSlotSet = new  HashSet<Timeslot>(allTimeSlots);
+				jury.setTimeslots(timeSlotSet);
+				juryService.save(jury);
+			});
+		});
+		
+		Button cmdExportJuryCalendar = new Button("Export juries calendar");
+		cmdExportJuryCalendar.addClickListener(clickEvent -> {
+			try {
+				excelService.exportJuriesCalendar(solution);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+
+		Button cmdExportContestantCalendar = new Button("Export contestants calendar");
+		cmdExportContestantCalendar.addClickListener(clickEvent -> {
+			try {
+				excelService.exportContestantsCalendar(solution);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+
 		Button cmdSolve = new Button("Solve");
 		cmdSolve.addClickListener(clickEvent -> {
-			// test solver
+			// solver
 			SolverFactory<TimeTable> solverFactory = SolverFactory
 					.create(new SolverConfig().withSolutionClass(TimeTable.class).withEntityClasses(Evaluation.class)
 							.withConstraintProviderClass(TimeTableConstraintProvider.class)
 							// The solver runs only for 5 seconds on this small dataset.
 							// It's recommended to run for at least 5 minutes ("5m") otherwise.
-							.withTerminationSpentLimit(Duration.ofSeconds(15)));
+							.withTerminationSpentLimit(Duration.ofMinutes(5)));
 
 			// Load the problem
-			TimeTable problem = generatePanningSolution();
+			TimeTable problem = generatePlanningSolution();
 
 			// Solve the problem
 			Solver<TimeTable> solver = solverFactory.buildSolver();
-			TimeTable solution = solver.solve(problem);
+			solution = solver.solve(problem);
 
 			// Visualize the solution
 			printTimetable(solution);
@@ -119,7 +155,7 @@ public class PlannerView extends VerticalLayout {
 		HorizontalLayout menu = new HorizontalLayout();
 		menu.setWidthFull();
 		add(menu);
-		menu.add(cmdSolve);
+		menu.add(cmdSolve,cmdAsignarTimslots, cmdExportJuryCalendar,cmdExportContestantCalendar);
 		add(calendar);
 		// this.setFlexGrow(1, calendar);
 		calendar.setHeightByParent(); // calculate the height by parent
@@ -163,7 +199,7 @@ public class PlannerView extends VerticalLayout {
         return entryProvider;
     }
     
-	public TimeTable generatePanningSolution() {
+	public TimeTable generatePlanningSolution() {
 		evaluationService.deleteAll();
 		TimeTable timeTable = new TimeTable();
 
@@ -206,14 +242,18 @@ public class PlannerView extends VerticalLayout {
 			// fetched from your database
 			entry.setStart(evaluation.getTimeslot().getStartTime());
 			entry.setEnd(evaluation.getTimeslot().getEndTime());
-			if (evaluation.getJury()!=null)
-				entry.setTitle(evaluation.getContestant().getCode() + "\\" + evaluation.getJury().getLastName());
-			else
-				entry.setTitle("not assigned");
 			String color=null;
 			color=evaluation.getContestant().getTopic().getColor();
 			entry.setColor(color);
-			entryList.add(entry);
+			if (evaluation.getJury()!=null)
+				entry.setTitle(evaluation.getContestant().getCode() + "\\" + evaluation.getJury().getLastName());
+			else 
+				entry.setTitle(evaluation.getContestant().getCode() + "\\" +"not assigned");
+			//todo: configure show/hide not assigned
+			if (evaluation.getJury()!=null)				
+				entryList.add(entry);
+
+			
 		}
 		// init lazy loading provider based on given collection - does NOT use the
 		// collection as backend as ListDataProvider does
