@@ -17,7 +17,14 @@
 package org.exporecerca.planner.data.entity;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import org.optaplanner.core.api.domain.solution.PlanningEntityCollectionProperty;
 import org.optaplanner.core.api.domain.solution.PlanningScore;
@@ -34,25 +41,35 @@ import lombok.Setter;
 @PlanningSolution
 @Getter
 @Setter
-public class TimeTable {
+@Entity
+public class TimeTable extends AbstractEntity{
 
+	@Column 
+	Date generationTime;
+	
+	@Transient
     @ProblemFactCollectionProperty
     private List<Timeslot> timeslotList;
 
+	@Transient
     @ProblemFactCollectionProperty
     private List<Jury> juryList;
 
+	@Transient
     @ProblemFactCollectionProperty
     private List<Contestant> contestantList;
     
+	@OneToMany(mappedBy = "timeTable", fetch = FetchType.EAGER) 
     @PlanningEntityCollectionProperty
     private List<Evaluation> evaluationList;
 
+	@Transient
     @PlanningScore
     private HardMediumSoftScore score;
 
     // Ignored by OptaPlanner, used by the UI to display solve or stop solving button
-    private SolverStatus solverStatus;
+	@Transient
+	private SolverStatus solverStatus;
 
     // No-arg constructor required for OptaPlanner
     public TimeTable() {

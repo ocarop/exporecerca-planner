@@ -24,6 +24,10 @@ import lombok.Setter;
 @RequiredArgsConstructor
 public class Evaluation extends AbstractEntity {
 	
+	@ManyToOne
+	@NonNull
+	TimeTable timeTable;
+
 	@PlanningVariable(valueRangeProviderRefs = "juryRange",nullable=true)
 	@ManyToOne
 	private Jury jury;

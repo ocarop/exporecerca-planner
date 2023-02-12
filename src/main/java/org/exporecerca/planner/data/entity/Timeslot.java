@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.NotNull;
 
 import lombok.Data;
@@ -17,6 +18,7 @@ import lombok.Setter;
 @Setter
 public class Timeslot extends AbstractEntity {
 
+	
 	@Column(nullable=false)
 	@NotNull
     private LocalDateTime startTime;

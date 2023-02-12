@@ -24,6 +24,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +41,7 @@ import org.exporecerca.planner.data.entity.Timeslot;
 import org.exporecerca.planner.data.service.ContestantService;
 import org.exporecerca.planner.data.service.EvaluationService;
 import org.exporecerca.planner.data.service.JuryService;
+import org.exporecerca.planner.data.service.TimeTableService;
 import org.exporecerca.planner.data.service.TimeslotService;
 import org.exporecerca.planner.excel.ExcelService;
 import org.exporecerca.planner.solver.TimeTableConstraintProvider;
@@ -70,14 +72,17 @@ public class PlannerView extends VerticalLayout {
 	private FullCalendar calendar;
 	private PlannerViewToolbar toolbar;
     private EvaluationService evaluationService;
-    private EntryProvider<Entry> entryProvider;
+    private TimeTableService timeTableService;
     private TimeTable solution;	
 
-	public PlannerView(TimeslotService timeslotService, ContestantService contestantService, JuryService juryService, EvaluationService evaluationService, ExcelService excelService) {
+	public PlannerView(TimeslotService timeslotService, ContestantService contestantService, 
+			JuryService juryService, EvaluationService evaluationService, 
+			TimeTableService timeTableService, ExcelService excelService) {
 		this.timeslotService = timeslotService;
 		this.contestantService = contestantService;
 		this.juryService = juryService;
 		this.evaluationService=evaluationService;
+		this.timeTableService = timeTableService;
 
 		setSpacing(false);
 		Button cmdAsignarTimslots = new Button("Asignar Timeslots");
@@ -119,7 +124,7 @@ public class PlannerView extends VerticalLayout {
 							.withConstraintProviderClass(TimeTableConstraintProvider.class)
 							// The solver runs only for 5 seconds on this small dataset.
 							// It's recommended to run for at least 5 minutes ("5m") otherwise.
-							.withTerminationSpentLimit(Duration.ofMinutes(5)));
+							.withTerminationSpentLimit(Duration.ofMinutes(1)));
 
 			// Load the problem
 			TimeTable problem = generatePlanningSolution();
@@ -200,9 +205,12 @@ public class PlannerView extends VerticalLayout {
     }
     
 	public TimeTable generatePlanningSolution() {
-		evaluationService.deleteAll();
+		//evaluationService.deleteAll();
 		TimeTable timeTable = new TimeTable();
-
+		
+		timeTable.setGenerationTime(new Date());
+		timeTable=timeTableService.update(timeTable);
+		
 		List<Timeslot> timeslotList = timeslotService.findAllByOrderByStartTime();
 
 		List<org.exporecerca.planner.data.entity.Contestant> contestantList = contestantService.findAll();
@@ -212,7 +220,7 @@ public class PlannerView extends VerticalLayout {
 		Integer id = 0;
 		for (Timeslot timeslot : timeslotList) {
 			for (Contestant contestant : contestantList) {
-				Evaluation evaluation = new Evaluation(contestant, timeslot);
+				Evaluation evaluation = new Evaluation(timeTable, contestant, timeslot);
 				evaluation = evaluationService.save(evaluation);
 				evaluationList.add(evaluation);
 			}
@@ -222,8 +230,7 @@ public class PlannerView extends VerticalLayout {
 		timeTable.setContestantList(contestantList);
 		timeTable.setTimeslotList(timeslotList);
 		timeTable.setEvaluationList(evaluationList);
-
-		return timeTable;
+		return timeTableService.update(timeTable);
 	}
 
 	private void printTimetable(TimeTable timeTable) {
